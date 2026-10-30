@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="description" content="Bảng dữ liệu 100 KPI điện toán tam phân và nhị phân, tái thiết kế theo phong cách MS-DOS đơn sắc.">
+  <title>TRITLAB.EXE — Ternary / Binary KPI · Monochrome DOS</title>
+  <style>
+    :root { --bg:#070707; --paper:#0f0f0f; --panel:#101010; --panel2:#171717; --fg:#f5f5f5; --soft:#d0d0d0; --muted:#a2a2a2; --border:#717171; --dimline:#3c3c3c; --on:#070707; --shadow:rgba(255,255,255,.08); --font:Consolas,'Cascadia Mono','Lucida Console','Courier New',monospace; }
+    body.invert { --bg:#f4f4f4; --paper:#fff; --panel:#fafafa; --panel2:#eaeaea; --fg:#0b0b0b; --soft:#262626; --muted:#555; --border:#444; --dimline:#b7b7b7; --on:#fff; --shadow:rgba(0,0,0,.10); }
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:65px}
+    body{background:var(--bg);color:var(--fg);font:14px/1.55 var(--font);margin:0;min-width:320px}
+    body.crt::after{content:"";position:fixed;inset:0;z-index:99;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(150,150,150,.065) 4px);mix-blend-mode:normal}
+    ::selection{background:var(--fg);color:var(--on)}
+    a{color:inherit;text-decoration:none}
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    button:disabled{cursor:not-allowed;opacity:.35}
+    button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px dashed var(--fg);outline-offset:4px}
+    .shell{max-width:1520px;margin:auto;padding:20px 27px 35px}
+    .thinbar{border:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:15px;padding:8px 13px;letter-spacing:.08em;font-size:11px;font-weight:700}
+    .thinbar .right{color:var(--muted);text-align:right}
+    .blink{display:inline-block;width:8px;height:12px;background:var(--fg);vertical-align:-2px;margin-left:5px;animation:blink 1.1s steps(2,end) infinite}
+    @keyframes blink{50%{opacity:0}}
+    .nav{display:flex;flex-wrap:wrap;gap:5px;align-items:center;padding:14px 0 16px;position:relative}
+    .nav a{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--dimline);padding:6px 11px;font-size:12px;color:var(--soft);transition:background .15s,color .15s}
+    .nav a:hover,.nav a:focus-visible{background:var(--fg);color:var(--on)}
+    .nav b{color:var(--muted);font-weight:400}
+    .nav button{margin-left:auto}
+    .small-btn,.action-btn,.pg-btn{background:var(--bg);color:var(--fg);border:1px solid var(--border);padding:8px 11px;font-size:12px;font-weight:700;white-space:nowrap}
+    .small-btn:hover,.action-btn:hover,.pg-btn:not(:disabled):hover{background:var(--fg);color:var(--on)}
+    .hero{border:1px solid var(--fg);display:grid;grid-template-columns:minmax(0,1.7fr) minmax(270px,.78fr);background:var(--paper);min-height:310px}
+    .hero-left{padding:32px 33px 25px;display:flex;flex-direction:column;justify-content:space-between}
+    .eyebrow{font-size:12px;letter-spacing:.11em;color:var(--muted);font-weight:700}
+    .hero h1{font-size:clamp(34px,5vw,70px);line-height:1.03;letter-spacing:-.07em;margin:16px 0 14px;font-weight:900}
+    .hero h1 .outline{color:var(--muted)}
+    .hero .sub{max-width:700px;color:var(--soft);font-size:13px;line-height:1.75}
+    .hero .path{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-top:26px;letter-spacing:.02em;font-size:12px}
+    .hero .path .cursor{display:inline-block;background:var(--fg);color:var(--on);padding:3px 7px;font-weight:bold}
+    .hero-right{border-left:1px solid var(--border);padding:20px 22px;display:flex;flex-direction:column;justify-content:space-between}
+    .screen-kicker{display:flex;justify-content:space-between;border-bottom:1px dashed var(--dimline);padding-bottom:10px;color:var(--muted);font-size:11px}
+    .logic-diagram{padding:14px 0;text-align:center}
+    .binary,.ternary{display:grid;gap:7px;margin:13px 0}
+    .binary{grid-template-columns:repeat(2,1fr)}
+    .ternary{grid-template-columns:repeat(3,1fr)}
+    .digit{border:1px solid var(--border);padding:12px 0;font-size:30px;font-weight:800;line-height:1}
+    .digit.filled{background:var(--fg);color:var(--on)}
+    .diagram-label{display:flex;justify-content:space-between;text-align:left;font-size:11px;letter-spacing:.1em;color:var(--soft)}
+    .diagram-label strong{color:var(--fg)}
+    .diagram-rule{height:1px;background:var(--dimline);margin:18px 0}
+    .keyline{font-size:11px;text-align:right;color:var(--muted)}
+    .section-top{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;margin:28px 0 13px}
+    .section-top h2{font-size:17px;letter-spacing:.025em;margin:0;font-weight:900}
+    .section-top h2::before{content:'> ';color:var(--muted)}
+    .section-top .aside{font-size:11px;color:var(--muted);text-align:right}
+    .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}
+    .stat{border:1px solid var(--border);padding:16px 16px 14px;min-height:123px;background:var(--panel)}
+    .stat .stat-head{display:flex;justify-content:space-between;gap:6px;color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.06em}
+    .stat .number{font-size:clamp(24px,3vw,39px);letter-spacing:-.07em;line-height:1.2;font-weight:900;margin:10px 0 4px;word-break:break-word}
+    .stat .note{font-size:11px;color:var(--muted)}
+    .notice{display:flex;gap:12px;align-items:flex-start;margin:15px 0 0;border:1px dashed var(--border);padding:12px 14px;color:var(--soft);font-size:12px;line-height:1.7}
+    .notice .marker{font-weight:900;white-space:nowrap;color:var(--fg)}
+    .charts{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+    .chart-card{border:1px solid var(--border);min-width:0;background:var(--panel);padding:17px 19px 18px}
+    .card-header{display:flex;justify-content:space-between;gap:8px;align-items:start;border-bottom:1px dashed var(--dimline);padding-bottom:10px;margin-bottom:15px}
+    .card-header h3{font-size:13px;margin:0;line-height:1.5}
+    .card-header .index{font-size:11px;color:var(--muted);white-space:nowrap}
+    .chart-note{font-size:11px;color:var(--muted);margin:11px 0 0;line-height:1.65}
+    .distribution{display:grid;grid-template-columns:minmax(145px,.88fr) minmax(0,1.12fr);align-items:center;gap:14px;min-height:290px}
+    #donut{width:100%;max-width:260px;aspect-ratio:1;margin:auto;display:block}
+    .legend{display:grid;gap:6px}
+    .legend-item{display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:9px;align-items:center;font-size:11px;color:var(--soft)}
+    .legend-item .swatch{width:10px;height:10px;border:1px solid var(--border)}
+    .legend-item .label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .legend-item .amount{font-weight:700;color:var(--fg);font-variant-numeric:tabular-nums}
+    .ranking{display:grid;gap:9px;margin-top:3px}
+    .rank-row{display:grid;grid-template-columns:22px minmax(0,1fr) 69px;gap:9px;align-items:center;font-size:11px}
+    .rank-index{color:var(--muted);font-variant-numeric:tabular-nums}
+    .rank-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--soft);min-width:0;cursor:help}
+    .rank-measure{font-weight:800;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+    .bar-track{grid-column:2;grid-row:auto;height:5px;background:var(--dimline);margin-top:-7px}
+    .bar-fill{height:100%;background:var(--fg);min-width:2px}
+    .toolbar{border:1px solid var(--border);padding:14px;background:var(--panel)}
+    .control-grid{display:grid;grid-template-columns:minmax(220px,1.5fr) minmax(170px,1fr) minmax(180px,1fr) auto auto;gap:10px;align-items:end}
+    .control-field{display:grid;gap:7px;min-width:0}
+    .control-field label{font-size:11px;color:var(--muted);letter-spacing:.06em;font-weight:800}
+    .control-field input,.control-field select{width:100%;border:1px solid var(--border);border-radius:0;background:var(--bg);color:var(--fg);height:39px;padding:0 11px;outline-offset:0;font-size:12px}
+    .control-field input::placeholder{color:var(--muted);opacity:1}
+    .control-field select{cursor:pointer}
+    .toolbar .action-btn{height:39px}
+    .table-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin:14px 0 10px;font-size:11px;color:var(--muted)}
+    .table-bar strong{color:var(--fg)}
+    .per-page{display:flex;align-items:center;gap:8px}
+    .per-page select{background:var(--bg);color:var(--fg);border:1px solid var(--border);font-size:11px;padding:5px 8px}
+    .table-wrap{border:1px solid var(--border);overflow:auto;max-height:900px;scrollbar-color:var(--border) var(--bg)}
+    table{width:100%;border-collapse:collapse;min-width:1040px;text-align:left;font-size:12px;table-layout:fixed}
+    th,td{border-right:1px solid var(--dimline);border-bottom:1px solid var(--dimline);padding:12px 12px;vertical-align:top}
+    th:last-child,td:last-child{border-right:0}
+    th{position:sticky;top:0;z-index:2;background:var(--fg);color:var(--on);font-size:11px;letter-spacing:.02em;line-height:1.25}
+    th button{border:0;background:transparent;color:inherit;text-align:left;padding:0;display:inline-block;width:100%;font-weight:900;cursor:pointer}
+    th button:hover{text-decoration:underline}
+    th .sort-arrow{opacity:.7;padding-left:3px}
+    tbody tr:nth-child(even){background:var(--paper)}
+    tbody tr:hover{background:var(--panel2)}
+    td:first-child{font-weight:900;color:var(--muted)}
+    .metric-name{display:block;font-weight:800;line-height:1.5}
+    .cat-code{display:inline-block;font-weight:bold;border:1px solid var(--border);font-size:11px;padding:4px 7px;white-space:nowrap}
+    .value-cell{font-weight:800;font-variant-numeric:tabular-nums}
+    .adv-num{display:inline-block;font-weight:800;font-variant-numeric:tabular-nums}
+    .adv-num.neg{border-bottom:1px dotted var(--fg)}
+    .source-btn{background:var(--bg);border:1px solid var(--border);color:var(--fg);padding:6px 9px;font:700 11px var(--font);white-space:nowrap}
+    .source-btn:hover{background:var(--fg);color:var(--on)}
+    .no-results{display:none;padding:35px;text-align:center;border:1px solid var(--border);border-top:0;color:var(--muted)}
+    .pager{display:flex;align-items:center;justify-content:space-between;gap:11px;margin:13px 0 0;flex-wrap:wrap}
+    .pager-info{color:var(--muted);font-size:11px}
+    .pager-controls{display:flex;gap:7px;align-items:center}
+    .pager-controls span{font-size:11px;color:var(--soft);padding:0 6px}
+    .guide{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+    .guide-card{border:1px solid var(--border);padding:17px 19px;background:var(--panel)}
+    .guide-card h3{margin:0 0 11px;font-size:13px}
+    .guide-card p{margin:0 0 10px;font-size:12px;color:var(--soft);line-height:1.8}
+    .kbd{display:inline-block;color:var(--fg);border:1px solid var(--border);padding:1px 6px;font-size:11px;font-weight:800}
+    .cmdline{display:flex;flex-direction:column;gap:8px;border:1px solid var(--fg);margin-top:24px;padding:16px 19px 18px;background:var(--paper)}
+    .cmd-head{display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--muted);font-size:11px}
+    .terminal-form{display:flex;align-items:center;gap:9px;min-width:0}
+    .terminal-form label{font-weight:900;white-space:nowrap;font-size:13px}
+    .terminal-form input{min-width:0;flex:1;background:transparent;color:var(--fg);border:0;border-bottom:1px solid var(--dimline);border-radius:0;height:38px;outline:none;font-size:13px}
+    .terminal-form input:focus{border-bottom-color:var(--fg)}
+    .terminal-form button{border:1px solid var(--border);background:var(--fg);color:var(--on);height:34px;padding:0 12px;font-weight:900}
+    .cmd-output{color:var(--soft);font-size:12px;line-height:1.7;min-height:22px;white-space:pre-wrap}
+    .foot{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;margin-top:15px;padding-top:10px;border-top:1px dashed var(--dimline);font-size:11px;color:var(--muted)}
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.86);z-index:200;display:none;align-items:center;justify-content:center;padding:15px}
+    .overlay.active{display:flex}
+    .modal{border:2px solid var(--fg);box-shadow:12px 12px 0 var(--shadow);background:var(--bg);color:var(--fg);width:min(720px,100%);max-height:90vh;overflow:auto}
+    .modal-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--fg);color:var(--on)}
+    .modal-head strong{font-size:12px}
+    .modal-head button{border:1px solid var(--on);background:transparent;color:var(--on);font-weight:900;padding:3px 9px}
+    .modal-body{padding:20px}
+    .modal h3{font-size:17px;line-height:1.45;margin:0 0 9px}
+    .modal .meta{color:var(--muted);font-size:12px;margin:0 0 17px;line-height:1.6}
+    .modal .detail{border:1px solid var(--border);padding:16px;color:var(--soft);font-size:12px;line-height:1.9;white-space:pre-line;overflow-wrap:anywhere}
+    .modal .detail strong{color:var(--fg)}
+    .source-link{display:inline-block;margin-top:16px;font-weight:900;font-size:12px;text-decoration:underline;overflow-wrap:anywhere}
+    .modal .caution{font-size:11px;color:var(--muted);border-top:1px dashed var(--dimline);padding-top:14px;margin-top:15px}
+    @media(max-width:1100px){.control-grid{grid-template-columns:1.4fr 1fr 1fr}.toolbar .action-btn{width:100%}.charts{grid-template-columns:1fr 1fr}.distribution{grid-template-columns:1fr}.legend{grid-template-columns:1fr 1fr}.legend-item{font-size:10px}#donut{max-width:200px}}
+    @media(max-width:800px){.shell{padding:10px 13px 27px}.hero{grid-template-columns:1fr}.hero-right{border-left:0;border-top:1px solid var(--border)}.hero-left{padding:25px 20px}.hero-right{padding:15px 20px}.logic-diagram{max-width:390px;margin:0 auto;width:100%}.charts{grid-template-columns:1fr}.distribution{grid-template-columns:minmax(140px,.75fr) 1fr}.legend{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.control-grid{grid-template-columns:1fr 1fr}.control-field:first-child{grid-column:1/-1}.guide{grid-template-columns:1fr}.thinbar{font-size:10px}.thinbar .right{display:none}.nav button{margin-left:0}}
+    @media(max-width:500px){.hero h1{font-size:34px}.section-top{align-items:start;flex-direction:column}.section-top .aside{text-align:left}.stat{padding:12px;min-height:113px}.stat .number{font-size:27px}.distribution{grid-template-columns:1fr}.legend{grid-template-columns:1fr 1fr}.control-grid{grid-template-columns:1fr}.control-field:first-child{grid-column:auto}.nav{gap:5px}.nav a{padding:6px 8px;font-size:11px}.nav b{display:none}.rank-row{grid-template-columns:18px minmax(0,1fr) 59px;gap:5px}.rank-measure{font-size:10px}.terminal-form label{font-size:10px}.hero .path{font-size:10px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.blink{animation:none}}
+    @media print{body{background:white!important;color:black!important}.shell{max-width:none;padding:0}.nav,.cmdline,.toolbar,.pager,.source-btn,.foot,.overlay{display:none!important}.table-wrap{max-height:none;overflow:visible}table{min-width:0}th{position:static}th,td{font-size:9px;padding:6px}.hero,.stat,.chart-card,.table-wrap,.notice{break-inside:avoid}}
+  </style>
+</head>
+<body class="crt">
+<div class="shell">
+  <header>
+    <div class="thinbar"><span>■ IBM PC/AT INSPIRED&nbsp; / &nbsp;MONOCHROME RESEARCH SYSTEM<span class="blink" aria-hidden="true"></span></span><span class="right">TRITLAB.EXE&nbsp; &nbsp;[VN/UTF-8]&nbsp; &nbsp;BUILD 2026.10</span></div>
+    <nav class="nav" aria-label="Điều hướng">
+      <a href="#overview"><b>[01]</b> TỔNG QUAN</a><a href="#visual"><b>[02]</b> BIỂU ĐỒ</a><a href="#database"><b>[03]</b> 100 KPI</a><a href="#manual"><b>[04]</b> HƯỚNG DẪN</a>
+      <button type="button" class="small-btn" id="themeBtn" title="Đảo màu trắng / đen">[F2] ĐẢO MÀU</button>
+      <button type="button" class="small-btn" id="crtBtn" title="Bật/tắt hiệu ứng màn hình CRT">[CRT: ON]</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="overview" aria-labelledby="heroHeading">
+      <div class="hero-left">
+        <div><div class="eyebrow">C:\RESEARCH\COMPUTING&gt; ANALYZE /DATA=100</div>
+          <h1 id="heroHeading">TERNARY<span class="outline">/</span><br>BINARY<span class="outline">.</span></h1>
+          <p class="sub">Đối chiếu 100 chỉ số nghiên cứu điện toán tam phân và nhị phân. Giao diện đầu cuối MS-DOS trắng–đen, đầy đủ tra cứu, phân loại, thống kê và truy xuất nguồn từ dữ liệu gốc.</p>
+        </div>
+        <div class="path"><span>C:\TRITLAB&gt;</span><span class="cursor">KPI.EXE /MONO /VN</span><span class="eyebrow">[READY]</span></div>
+      </div>
+      <div class="hero-right" aria-label="Minh họa số học nhị phân và tam phân">
+        <div class="screen-kicker"><span>LOGIC REPRESENTATION</span><span>BASE_02 // BASE_03</span></div>
+        <div class="logic-diagram">
+          <div class="diagram-label"><strong>BASE 02</strong><span>1 BIT · 2 STATES</span></div>
+          <div class="binary"><div class="digit">0</div><div class="digit filled">1</div></div>
+          <div class="diagram-rule"></div>
+          <div class="diagram-label"><strong>BASE 03</strong><span>1 TRIT · 3 STATES</span></div>
+          <div class="ternary"><div class="digit">−1</div><div class="digit filled">0</div><div class="digit">+1</div></div>
+        </div>
+        <div class="keyline">LOG₂(3) ≈ 1.585 BIT/TRIT &nbsp;·&nbsp; [BALANCED TERNARY]</div>
+      </div>
+    </section>
+
+    <div class="section-top"><h2>THỐNG KÊ HỆ THỐNG</h2><div class="aside">DATABASE / STATISTICS / READ-ONLY</div></div>
+    <section class="stats" aria-label="Chỉ số tổng quan">
+      <div class="stat"><div class="stat-head"><span>01 / BẢN GHI KPI</span><span>[#]</span></div><div class="number" id="totalKpi">100</div><div class="note">Tổng số chỉ số trong dữ liệu</div></div>
+      <div class="stat"><div class="stat-head"><span>02 / ADV TRUNG BÌNH*</span><span>[%]</span></div><div class="number" id="avgAdv">—</div><div class="note">Chỉ số quy đổi theo tệp gốc</div></div>
+      <div class="stat"><div class="stat-head"><span>03 / ADV CAO NHẤT*</span><span>[%]</span></div><div class="number" id="topAdv">—</div><div class="note">Không phải mức tăng phổ quát</div></div>
+      <div class="stat"><div class="stat-head"><span>04 / LĨNH VỰC</span><span>[DIR]</span></div><div class="number" id="catCount">—</div><div class="note">Nhóm chuyên đề thực tế</div></div>
+    </section>
+    <div class="notice" role="note"><span class="marker">[!]</span><span><strong>Lưu ý về dữ liệu:</strong> Toàn bộ 100 KPI, giá trị và liên kết giữ theo tệp gốc được cung cấp, chưa kiểm chứng độc lập. Trường ADV chứa cả phần trăm lẫn giá trị quy đổi từ hệ số nhân và chỉ báo khác nhau; vì vậy trung bình, thứ hạng không dùng làm kết luận thực nghiệm giữa các nghiên cứu.</span></div>
+
+    <div class="section-top" id="visual"><h2>TRỰC QUAN DỮ LIỆU</h2><div class="aside">DISPLAY / GRAYSCALE / NO EXTERNAL LIBRARY</div></div>
+    <section class="charts" aria-label="Biểu đồ KPI">
+      <div class="chart-card"><div class="card-header"><h3>[A] PHÂN BỐ KPI THEO LĨNH VỰC</h3><span class="index">TYPE: DONUT</span></div><div class="distribution"><svg id="donut" viewBox="0 0 280 280" role="img" aria-label="Biểu đồ vòng phân bố KPI theo lĩnh vực"></svg><div class="legend" id="categoryLegend"></div></div><div class="chart-note">Phân bố số lượng KPI theo từng nhóm, không đại diện cho mức độ hiệu quả của công nghệ.</div></div>
+      <div class="chart-card"><div class="card-header"><h3>[B] TOP 10 CHỈ SỐ ADV QUY ĐỔI*</h3><span class="index">SCALE: LOG</span></div><div class="ranking" id="topRanking"></div><div class="chart-note">Chiều dài thanh hiển thị theo log(1 + ADV) để dễ quan sát. Các giá trị trộn nhiều loại phép đo, không phải bảng xếp hạng khoa học chuẩn hóa.</div></div>
+    </section>
+
+    <div class="section-top" id="database"><h2>TRUY VẤN CƠ SỞ DỮ LIỆU</h2><div class="aside">SELECT * FROM KPI_DATABASE; &nbsp;[100 ENTRIES]</div></div>
+    <section aria-label="Tra cứu và bảng KPI">
+      <div class="toolbar"><div class="control-grid">
+        <div class="control-field"><label for="searchInput">/FIND &nbsp;TÌM KIẾM CHỈ SỐ, GIÁ TRỊ, NGUỒN</label><input type="search" id="searchInput" placeholder="Gõ từ khóa... (nhấn / để tìm)" autocomplete="off"></div>
+        <div class="control-field"><label for="categoryFilter">/GROUP &nbsp;LĨNH VỰC</label><select id="categoryFilter"><option value="all">TẤT CẢ NHÓM</option></select></div>
+        <div class="control-field"><label for="sortSelect">/SORT &nbsp;SẮP XẾP</label><select id="sortSelect"><option value="id">MẶC ĐỊNH (#)</option><option value="name">TÊN (A–Z)</option><option value="cat">NHÓM (A–Z)</option><option value="adv-desc">ADV GIẢM DẦN</option><option value="adv-asc">ADV TĂNG DẦN</option></select></div>
+        <button class="action-btn" type="button" id="resetBtn">[↺] ĐẶT LẠI</button>
+        <button class="action-btn" type="button" id="exportBtn">[↓] XUẤT CSV</button>
+      </div></div>
+      <div class="table-bar"><span>STATUS: <strong id="resultStatus">READY</strong> &nbsp; · &nbsp;HIỂN THỊ <strong id="visibleCount">100</strong> / <strong id="allCount">100</strong> BẢN GHI</span><div class="per-page"><label for="pageSize">SỐ DÒNG / TRANG</label><select id="pageSize"><option value="20">20</option><option value="50">50</option><option value="100">100</option></select></div></div>
+      <div class="table-wrap" id="tableScroll" tabindex="0" aria-label="Bảng 100 KPI, có thể cuộn ngang trên màn hình nhỏ"><table><colgroup><col style="width:52px"><col style="width:36%"><col style="width:133px"><col style="width:20%"><col style="width:120px"><col style="width:105px"></colgroup>
+        <thead><tr><th><button type="button" data-sort="id">#<span class="sort-arrow">↕</span></button></th><th><button type="button" data-sort="name">TÊN CHỈ SỐ <span class="sort-arrow">↕</span></button></th><th><button type="button" data-sort="cat">NHÓM <span class="sort-arrow">↕</span></button></th><th><button type="button" data-sort="val">GIÁ TRỊ / LỢI THẾ <span class="sort-arrow">↕</span></button></th><th><button type="button" data-sort="adv">ADV* <span class="sort-arrow">↕</span></button></th><th>NGUỒN</th></tr></thead>
+        <tbody id="tableBody"></tbody></table></div>
+      <div id="noResults" class="no-results">[ERROR 404] KHÔNG TÌM THẤY KPI PHÙ HỢP. THỬ TỪ KHÓA KHÁC.</div>
+      <div class="pager"><div class="pager-info" id="pageInfo">HIỂN THỊ 1–20 / 100</div><div class="pager-controls"><button type="button" class="pg-btn" id="prevPage">&lt; TRANG TRƯỚC</button><span id="pageIndicator">01 / 05</span><button type="button" class="pg-btn" id="nextPage">TRANG SAU &gt;</button></div></div>
+    </section>
+
+    <div class="section-top" id="manual"><h2>HƯỚNG DẪN SỬ DỤNG</h2><div class="aside">HELP / COMMANDS / KEYBOARD</div></div>
+    <section class="guide" aria-label="Hướng dẫn">
+      <div class="guide-card"><h3>[01] PHÍM TẮT</h3><p><span class="kbd">/</span> Tìm kiếm · <span class="kbd">ESC</span> Đóng cửa sổ · <span class="kbd">?</span> Mở trợ giúp · <span class="kbd">F2</span> Đảo màu trắng–đen.</p><p>Nhấn cột trong bảng để sắp xếp. Nút <span class="kbd">[SRC]</span> mở giải thích, nguồn và liên kết của từng KPI.</p></div>
+      <div class="guide-card"><h3>[02] CÚ PHÁP LỆNH DOS</h3><p><span class="kbd">HELP</span> · <span class="kbd">FIND ternary</span> · <span class="kbd">CAT AI</span> · <span class="kbd">VIEW 40</span> · <span class="kbd">SORT ADV</span> · <span class="kbd">EXPORT</span> · <span class="kbd">RESET</span> · <span class="kbd">CRT</span> · <span class="kbd">INVERT</span></p><p>Toàn bộ chức năng xử lý ngay trên trình duyệt. Chỉ liên kết nguồn mới mở trang ngoài.</p></div>
+    </section>
+
+    <section class="cmdline" aria-label="Dòng lệnh tương tác">
+      <div class="cmd-head"><span>MS-DOS COMMAND INTERFACE / TRITLAB TERMINAL</span><span>VER 1.0</span></div>
+      <form class="terminal-form" id="cmdForm"><label for="cmdInput">C:\TRITLAB&gt;</label><input id="cmdInput" type="text" placeholder="Nhập HELP rồi nhấn Enter" autocomplete="off" spellcheck="false"><button type="submit">ENTER ↵</button></form>
+      <div class="cmd-output" id="cmdOutput" role="status" aria-live="polite">READY. Nhập HELP để xem danh sách lệnh khả dụng.</div>
+    </section>
+  </main>
+  <footer class="foot"><span>TRITLAB.EXE &nbsp;·&nbsp; MS-DOS / MONOCHROME EDITION &nbsp;·&nbsp; UTF-8 VIETNAMESE</span><span>LOCAL FIRST / NO COOKIES / NO CHART CDN</span></footer>
+</div>
+
+<div class="overlay" id="modalOverlay" role="presentation"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1"><div class="modal-head"><strong>■ KPI_RECORD.TXT &nbsp; [READ ONLY]</strong><button type="button" id="closeModalBtn" aria-label="Đóng hộp thoại">[X] ĐÓNG</button></div><div class="modal-body"><h3 id="modalTitle"></h3><p id="modalMeta" class="meta"></p><div id="modalDetail" class="detail"></div><div id="modalSource"></div><div class="caution">* Số liệu và nội dung nguồn kế thừa từ tệp được cung cấp, không hàm ý đã xác minh độ chính xác của tuyên bố hoặc tính hợp lệ của liên kết.</div></div></div></div>
+
+<script>
+'use strict';
+// 100 bản ghi gốc được bảo toàn nội dung và URL.
+const KPIS = [
+
+    // --- 1. INFORMATION DENSITY & CODING (1-8) ---
+    {id:1, name:"Mật độ thông tin mỗi trit", cat:"Info", val:"≈1.585 bit/trit", adv:58.5,
+     source:"IEEE / arXiv (2024–2025)", 
+     detail:"Một trit (chữ số tam phân) mang log₂(3) ≈ 1.585 bit thông tin. So với 1 bit nhị phân, đây là lợi thế mật độ 58,5% — cùng dung lượng nhưng cần ít đơn vị lưu trữ hơn.",
+     url:"https://arxiv.org/abs/2409.01042"},
+    {id:2, name:"Lợi thế kinh tế cơ số (radix economy)", cat:"Info", val:"Cơ số 3 tối ưu", adv:5.68,
+     source:"MathOverflow / Zenodo (2025)",
+     detail:"Trong các hệ đếm nguyên, cơ số 3 có 'radix economy' thấp nhất (chi phí biểu diễn số theo tích cơ số × số chữ số). Cơ số 3 tiết kiệm ~5,68% so với cơ số 2.",
+     url:"https://mathoverflow.net/questions/denominator-of-radix-economy"},
+    {id:3, name:"Hiệu quả lưu trữ dữ liệu", cat:"Info", val:"Cao hơn ~50%", adv:50,
+     source:"ACS Publications (2026)",
+     detail:"Với cùng một tập dữ liệu rời rạc, lưu trữ tam phân đạt hiệu quả cao hơn khoảng 50% so với nhị phân nhờ mỗi ô nhớ biểu diễn được 3 trạng thái thay vì 2.",
+     url:"https://pubs.acs.org/doi/10.1021/acsami.6b00000"},
+    {id:4, name:"Mật độ mã hóa trên một đơn vị diện tích", cat:"Info", val:"Cao hơn nhị phân", adv:33,
+     source:"Springer, Nonlinear Dynamics (2024)",
+     detail:"Ô nhớ tam phân (memristor 3 trạng thái) lưu được nhiều thông tin hơn trên cùng diện tích vật lý so với ô nhớ nhị phân, nhờ giảm số ô cần thiết cho cùng dung lượng.",
+     url:"https://link.springer.com/article/10.1007/s11071-024-00000"},
+    {id:5, name:"Hiệu suất đóng gói trạng thái", cat:"Info", val:">98%", adv:98,
+     source:"GitHub – ternary-compression (2026)",
+     detail:"Kỹ thuật đóng gói 5 trit trong 1 byte đạt 1,6 bit/trit, chỉ cách giới hạn Shannon (1,585 bit/trit) 0,015 bit — hiệu suất sử dụng trạng thái trên 98%.",
+     url:"https://github.com/SuperInstance/ternary-compression"},
+    {id:6, name:"Nén bộ nhớ mô hình LLM 7B", cat:"Info", val:"16× (28GB→1,75GB)", adv:1600,
+     source:"Zenodo – Balanced Ternary Transformers (2025)",
+     detail:"Lượng tử hóa trọng số LLM xuống tam phân giúp nén bộ nhớ mô hình 7 tỷ tham số từ 28GB xuống 1,75GB — mức nén 16 lần, cho phép chạy trên thiết bị biên.",
+     url:"https://zenodo.org/record/ternary-transformers"},
+    {id:7, name:"Giảm băng thông bus dữ liệu", cat:"Info", val:"−20,75%", adv:20.75,
+     source:"arXiv – Ternary LLM (2025)",
+     detail:"Đóng gói 5 trit dày đặc giảm 20,75% lưu lượng bộ nhớ và PCIe so với trường bit 2-bit thông thường khi truyền cùng lượng thông tin.",
+     url:"https://arxiv.org/abs/2502.00000"},
+    {id:8, name:"Số đường dây vật lý cho cùng băng thông", cat:"Info", val:"−37%", adv:37,
+     source:"TernaryLogic Governance Doc (2025)",
+     detail:"Một bus tam phân mang n trit tương đương thông tin với bus nhị phân 1,58n bit, cần ít hơn khoảng 37% số đường dây vật lý cho cùng băng thông.",
+     url:"https://github.com/FractonicMind/TernaryLogic"},
+
+    // --- 2. ARITHMETIC UNITS – PDP / POWER (9-28) ---
+    {id:9, name:"Ternary MAC: công suất so với thiết kế chính xác", cat:"Arith", val:"−30%", adv:30,
+     source:"IEEE TCAS-I (2025) – Wen et al.",
+     detail:"Bộ nhân-tích lũy (MAC) tam phân dùng thuật toán xấp xỉ chỉ tiêu thụ ít hơn 30% công suất so với thiết kế chính xác, với sai số tính toán chỉ 2%.",
+     url:"https://doi.org/10.1109/TCSI.2024.3492797"},
+    {id:10, name:"Ternary MAC: PDP so với công trình trước", cat:"Arith", val:"−74% đến −80%", adv:77,
+     source:"IEEE TCAS-I (2025) – Wen et al.",
+     detail:"Thiết kế mạch tam phân tinh chỉnh đạt PDP (tích công suất–độ trễ) thấp hơn 74%–80% so với các thiết kế MAC tam phân trước đó.",
+     url:"https://doi.org/10.1109/TCSI.2024.3492797"},
+    {id:11, name:"Ternary MAC: diện tích so với nhị phân", cat:"Arith", val:"−45%", adv:45,
+     source:"IEEE TCAS-I (2025) – Wen et al.",
+     detail:"Trên cùng quy trình (CNTFET và CMOS 180nm), mạch MAC tam phân nhỏ hơn khoảng 45% diện tích so với mạch nhị phân tương đương.",
+     url:"https://doi.org/10.1109/TCSI.2024.3492797"},
+    {id:12, name:"Ternary MAC: công suất so với nhị phân", cat:"Arith", val:"−30%", adv:30,
+     source:"IEEE TCAS-I (2025) – Wen et al.",
+     detail:"Cùng so sánh trên, mạch MAC tam phân tiêu thụ ít hơn khoảng 30% công suất so với mạch nhị phân cho cùng chức năng.",
+     url:"https://doi.org/10.1109/TCSI.2024.3492797"},
+    {id:13, name:"REBEL-6 ISA: giảm số lệnh thực thi", cat:"Arith", val:"−1,4%", adv:1.4,
+     source:"IEEE ISMVL 2025 – REBEL-6",
+     detail:"Kiến trúc tập lệnh ternary cân bằng 32-trit (REBEL-6) giảm 1,4% số lệnh thực thi so với RV32I nhị phân nhờ so sánh ba nhánh và làm tròn tích hợp.",
+     url:"https://www.computer.org/csdl/proceedings-article/ismvl/2025/074400a098/27EbFC1uLcY"},
+    {id:14, name:"REBEL-6 ISA: giảm công suất động", cat:"Arith", val:"−33,2%", adv:33.2,
+     source:"IEEE ISMVL 2025 – REBEL-6",
+     detail:"Cùng kiến trúc REBEL-6, công suất động giảm 33,2% nhờ cải thiện mật độ thông tin và giảm chuyển đổi trạng thái.",
+     url:"https://www.computer.org/csdl/proceedings-article/ismvl/2025/074400a098/27EbFC1uLcY"},
+    {id:15, name:"Ternary adder không nhớ (carry-free): giảm công suất", cat:"Arith", val:"−10,22%", adv:10.22,
+     source:"Google Scholar (2024) – Carry-Free Adder",
+     detail:"Bộ cộng tam phân trong hệ số dư (redundant number system) giảm 10,22% công suất so với bộ cộng nhị phân ở giới hạn tần số nhị phân.",
+     url:"https://scholar.google.it/citations?user=ternary-adder"},
+    {id:16, name:"TMUX tam phân: giảm công suất trung bình", cat:"Arith", val:"−98%", adv:98,
+     source:"ScienceDirect (2025) – Chauhan et al.",
+     detail:"Bộ ghép kênh tam phân (TMUX) dùng CNTFET giảm tới 98% công suất trung bình so với thiết kế hiện có, nhờ giảm số transistor và điện dung chuyển mạch.",
+     url:"https://www.sciencedirect.com/science/article/pii/S2772671125000191"},
+    {id:17, name:"TMUX tam phân: cải thiện PDP", cat:"Arith", val:"−99%", adv:99,
+     source:"ScienceDirect (2025) – Chauhan et al.",
+     detail:"Cùng thiết kế TMUX, PDP được cải thiện tới 99% so với các thiết kế tham chiếu.",
+     url:"https://www.sciencedirect.com/science/article/pii/S2772671125000191"},
+    {id:18, name:"THA tam phân: giảm số transistor", cat:"Arith", val:"−64%", adv:64,
+     source:"ScienceDirect (2025) – Chauhan et al.",
+     detail:"Bộ bán cộng tam phân (THA) giảm tới 64% số lượng transistor so với thiết kế hiện có, nhờ tối ưu hóa cổng logic ba trạng thái.",
+     url:"https://www.sciencedirect.com/science/article/pii/S2772671125000191"},
+    {id:19, name:"THA tam phân: giảm độ trễ", cat:"Arith", val:"−93%", adv:93,
+     source:"ScienceDirect (2025) – Chauhan et al.",
+     detail:"Độ trễ của bộ bán cộng tam phân giảm tới 93% so với thiết kế tham chiếu, nhờ giảm tầng logic và tận dụng đặc tính CNTFET.",
+     url:"https://www.sciencedirect.com/science/article/pii/S2772671125000191"},
+    {id:20, name:"THA tam phân: cải thiện PDP", cat:"Arith", val:"−99%", adv:99,
+     source:"ScienceDirect (2025) – Chauhan et al.",
+     detail:"PDP của bộ bán cộng tam phân giảm tới 99% so với thiết kế hiện có.",
+     url:"https://www.sciencedirect.com/science/article/pii/S2772671125000191"},
+    {id:21, name:"TMUL tam phân: giảm số transistor", cat:"Arith", val:"−60%", adv:60,
+     source:"ScienceDirect (2025) – Chauhan et al.",
+     detail:"Bộ nhân tam phân (TMUL) giảm tới 60% số transistor so với thiết kế tham chiếu.",
+     url:"https://www.sciencedirect.com/science/article/pii/S2772671125000191"},
+    {id:22, name:"TMUL tam phân: giảm công suất trung bình", cat:"Arith", val:"−91%", adv:91,
+     source:"ScienceDirect (2025) – Chauhan et al.",
+     detail:"Công suất trung bình của TMUL giảm tới 91% so với thiết kế hiện có.",
+     url:"https://www.sciencedirect.com/science/article/pii/S2772671125000191"},
+    {id:23, name:"TMUL tam phân: cải thiện PDP", cat:"Arith", val:"−92%", adv:92,
+     source:"ScienceDirect (2025) – Chauhan et al.",
+     detail:"PDP của TMUL giảm tới 92% so với thiết kế tham chiếu.",
+     url:"https://www.sciencedirect.com/science/article/pii/S2772671125000191"},
+    {id:24, name:"CNFET THA: giảm số transistor", cat:"Arith", val:"−43%", adv:43,
+     source:"Elsevier Integration VLSI (2025)",
+     detail:"Thiết kế bán cộng tam phân dựa trên CNFET giảm trung bình 43% số transistor so với các topo trước đó.",
+     url:"https://www.sciencedirect.com/science/article/abs/pii/S0167926025000987"},
+    {id:25, name:"CNFET THA: cải thiện PDP", cat:"Arith", val:"−83%", adv:83,
+     source:"Elsevier Integration VLSI (2025)",
+     detail:"PDP của bán cộng CNFET tam phân giảm trung bình 83% so với các benchmark.",
+     url:"https://www.sciencedirect.com/science/article/abs/pii/S0167926025000987"},
+    {id:26, name:"CNFET TMUL: giảm số transistor", cat:"Arith", val:"−37%", adv:37,
+     source:"Elsevier Integration VLSI (2025)",
+     detail:"Bộ nhân tam phân CNFET giảm trung bình 37% số transistor so với các thiết kế so sánh.",
+     url:"https://www.sciencedirect.com/science/article/abs/pii/S0167926025000987"},
+    {id:27, name:"CNFET TMUL: cải thiện PDP", cat:"Arith", val:"−65%", adv:65,
+     source:"Elsevier Integration VLSI (2025)",
+     detail:"PDP của bộ nhân CNFET tam phân giảm trung bình 65% so với benchmark.",
+     url:"https://www.sciencedirect.com/science/article/abs/pii/S0167926025000987"},
+    {id:28, name:"FST ternary multiplier: giảm công suất", cat:"Arith", val:"41×", adv:4000,
+     source:"IEEE (2026) – FST Ternary Multiplier",
+     detail:"Bộ nhân tam phân dùng kỹ thuật forced stack (FST) trên CNTFET giảm công suất 41 lần và cải thiện PDP 17,36% so với bộ nhân tam phân thông thường.",
+     url:"https://ieeexplore.ieee.org/document/ternary-fst"},
+    {id:29, name:"Ternary decoder: giảm công suất", cat:"Arith", val:"−48%", adv:48,
+     source:"J. Institution of Engineers (India) (2024)",
+     detail:"Bộ giải mã tam phân dùng CNTFET giảm tới 48% công suất tiêu tán so với mạch hiện có.",
+     url:"https://scholar.google.nl/citations?user=gGHx_ZsAAAAJ"},
+    {id:30, name:"Ternary decoder: cải thiện PDP", cat:"Arith", val:"−74%", adv:74,
+     source:"J. Institution of Engineers (India) (2024)",
+     detail:"Cùng bộ giải mã, PDP cải thiện tới 74% so với thiết kế tham chiếu.",
+     url:"https://scholar.google.nl/citations?user=gGHx_ZsAAAAJ"},
+    {id:31, name:"Ternary comparator: tiết kiệm công suất", cat:"Arith", val:"−82%", adv:82,
+     source:"J. Institution of Engineers (India) (2024)",
+     detail:"Bộ so sánh tam phân tiết kiệm 82% công suất so với các bộ so sánh tam phân khác.",
+     url:"https://scholar.google.nl/citations?user=gGHx_ZsAAAAJ"},
+
+    // --- 3. ENERGY EFFICIENCY – AI / ML (32-45) ---
+    {id:32, name:"Ternary in-memory computing: tiết kiệm năng lượng lưu trữ", cat:"AI", val:"−91%", adv:91,
+     source:"ScienceDirect (2025) – Wearable Health",
+     detail:"Kiến trúc bộ nhớ tam phân 1T1R cho tính toán trong bộ nhớ giảm 91% năng lượng lưu trữ so với các giải pháp thay thế.",
+     url:"https://www.sciencedirect.com/science/article/abs/pii/S0167739X25004856"},
+    {id:33, name:"Ternary full adder/multiplier trong bộ nhớ: tiết kiệm năng lượng", cat:"AI", val:"−90,3%", adv:90.3,
+     source:"ScienceDirect (2025) – Wearable Health",
+     detail:"Triển khai trong bộ nhớ của bộ cộng và bộ nhân tam phân đầy đủ tiết kiệm 90,3% năng lượng so với các thiết kế trước.",
+     url:"https://www.sciencedirect.com/science/article/abs/pii/S0167739X25004856"},
+    {id:34, name:"Ternary classifier trên thiết bị đeo: tiết kiệm công suất", cat:"AI", val:"−97%", adv:97,
+     source:"ScienceDirect (2025) – Wearable Health",
+     detail:"Mạng nơ-ron tam phân dùng cho chẩn đoán ung thư da trên thiết bị đeo tiết kiệm 97% công suất so với phân loại độ chính xác đầy đủ, trong khi vẫn giữ độ chính xác 88%.",
+     url:"https://www.sciencedirect.com/science/article/abs/pii/S0167739X25004856"},
+    {id:35, name:"Ternary Transformer: giảm năng lượng mỗi lần suy luận", cat:"AI", val:"−93,8%", adv:93.8,
+     source:"Zenodo (2025) – Balanced Ternary Transformers",
+     detail:"Transformer tam phân cân bằng loại bỏ phép nhân ma trận dấu phẩy động, giảm 93,8% năng lượng tiêu thụ trên mỗi lần suy luận so với mô hình float32.",
+     url:"https://zenodo.org/record/ternary-transformers"},
+    {id:36, name:"Ternary Transformer: tăng thông lượng lý thuyết", cat:"AI", val:"48×", adv:4800,
+     source:"Zenodo (2025) – Balanced Ternary Transformers",
+     detail:"Việc loại bỏ hoàn toàn phép nhân ma trận mở ra tiềm năng tăng thông lượng lý thuyết lên tới 48 lần so với baseline dấu phẩy động.",
+     url:"https://zenodo.org/record/ternary-transformers"},
+    {id:37, name:"Ternary Transformer: bảo toàn tín hiệu", cat:"AI", val:"87%–92%", adv:89.5,
+     source:"Zenodo (2025) – Balanced Ternary Transformers",
+     detail:"Mặc dù lượng tử hóa xuống tam phân, mô hình vẫn giữ được 87%–92% tín hiệu so với baseline float32, cho thấy mức suy giảm chất lượng chấp nhận được.",
+     url:"https://zenodo.org/record/ternary-transformers"},
+    {id:38, name:"xTern (RISC-V edge): cải thiện hiệu quả năng lượng", cat:"AI", val:"+57,1%", adv:57.1,
+     source:"IEEE ASAP 2024 – xTern",
+     detail:"Mạng nơ-ron tam phân trên nền RISC-V cho thiết bị biên cải thiện hiệu quả năng lượng 57,1% so với mạng nhị phân, trong khi công suất chỉ tăng 5,2%.",
+     url:"https://scholar.google.nl/citations?user=xtern"},
+    {id:39, name:"SATLLM accelerator: hiệu quả năng lượng", cat:"AI", val:"9,42 TOPS/W", adv:42.41,
+     source:"ACM TODAES (2025) – SATLLM",
+     detail:"Bộ tăng tốc LLM trọng số tam phân đạt hiệu quả năng lượng 9,42 TOPS/W, cải thiện tới 42,41 lần so với NVIDIA V100 và 16,99 lần so với A100.",
+     url:"https://dl.acm.org/doi/abs/10.1145/3844511"},
+    {id:40, name:"TerEffic (FPGA): thông lượng giải mã", cat:"AI", val:"12.700 tokens/s", adv:14900,
+     source:"arXiv (2025) – TerEffic",
+     detail:"Bộ tăng tốc LLM tam phân trên FPGA đạt 12.700 tokens/giây cho mô hình 370M tham số — nhanh hơn 149 lần so với NVIDIA Jetson Orin Nano.",
+     url:"https://arxiv.org/abs/2502.16473"},
+    {id:41, name:"TerEffic (FPGA): hiệu quả năng lượng", cat:"AI", val:"467 tokens/s/W", adv:1900,
+     source:"arXiv (2025) – TerEffic",
+     detail:"Cùng thiết kế, hiệu quả năng lượng đạt 467 tokens/giây/W — tốt hơn 19 lần so với Jetson Orin Nano.",
+     url:"https://arxiv.org/abs/2502.16473"},
+    {id:42, name:"TerEffic HBM-assisted (2.7B): thông lượng", cat:"AI", val:"521 tokens/s", adv:200,
+     source:"arXiv (2025) – TerEffic",
+     detail:"Phiên bản HBM-assisted cho mô hình 2,7B tham số đạt 521 tokens/giây (gấp 2 lần A100) với công suất 33W.",
+     url:"https://arxiv.org/abs/2502.16473"},
+    {id:43, name:"TerEffic HBM-assisted: hiệu quả năng lượng", cat:"AI", val:"16 tokens/s/W", adv:800,
+     source:"arXiv (2025) – TerEffic",
+     detail:"Hiệu quả năng lượng 16 tokens/giây/W, tốt hơn 8 lần so với NVIDIA A100.",
+     url:"https://arxiv.org/abs/2502.16473"},
+    {id:44, name:"Ternary SNN: tiết kiệm năng lượng so với SNN khác", cat:"AI", val:"7,5×", adv:650,
+     source:"ScienceDirect (2025) – Ternary SNN",
+     detail:"Hệ thống xử lý tín hiệu neuromorphic dùng SNN tam phân tiết kiệm năng lượng gấp 7,5 lần so với các công trình SNN khác.",
+     url:"https://www.sciencedirect.com/science/article/pii/S2772671125000191"},
+    {id:45, name:"Ternary BNN: cải thiện độ chính xác so với BNN", cat:"AI", val:"Cao hơn BNN", adv:15,
+     source:"IEEE (2025) – TNN vs BNN",
+     detail:"Mạng nơ-ron tam phân (trọng số {-1,0,+1}) cho độ chính xác được cải thiện so với mạng nhị phân (BNN), trong khi vẫn giữ lợi thế phần cứng của lượng tử hóa cực thấp.",
+     url:"https://ieeexplore.ieee.org/document/ternary-bnn"},
+
+    // --- 4. MEMORY – SRAM / TCAM / eDRAM (46-58) ---
+    {id:46, name:"TRIO-TCAM: giảm diện tích ô", cat:"Memory", val:"−7,6%", adv:7.6,
+     source:"IEEE (2024) – TRIO-TCAM",
+     detail:"TCAM tam phân dùng ô SRAM 10-transistor trên 28nm FD-SOI giảm 7,6% diện tích ô so với thiết kế SOTA.",
+     url:"https://ieeexplore.ieee.org/document/10795131"},
+    {id:47, name:"TRIO-TCAM: giảm độ trễ tìm kiếm", cat:"Memory", val:"−37,4%", adv:37.4,
+     source:"IEEE (2024) – TRIO-TCAM",
+     detail:"Độ trễ tìm kiếm của TRIO-TCAM giảm tới 37,4% so với thiết kế SOTA.",
+     url:"https://ieeexplore.ieee.org/document/10795131"},
+    {id:48, name:"TRIO-TCAM: giảm năng lượng tìm kiếm mỗi bit", cat:"Memory", val:"−67,6%", adv:67.6,
+     source:"IEEE (2024) – TRIO-TCAM",
+     detail:"Năng lượng tìm kiếm trên mỗi bit giảm tới 67,6% so với thiết kế SOTA.",
+     url:"https://ieeexplore.ieee.org/document/10795131"},
+    {id:49, name:"TRIO-TCAM: giảm dòng rò ô nhớ", cat:"Memory", val:"−41,7%", adv:41.7,
+     source:"IEEE (2024) – TRIO-TCAM",
+     detail:"Dòng rò của ô nhớ giảm hơn 41,7% so với thiết kế SOTA.",
+     url:"https://ieeexplore.ieee.org/document/10795131"},
+    {id:50, name:"8T-2MTJ TCAM: độ trễ tìm kiếm", cat:"Memory", val:"0,0744 ns", adv:85,
+     source:"IEEE (2025) – 8T-2MTJ TCAM",
+     detail:"Ô TCAM tam phân không bay hơi 8T-2MTJ đạt độ trễ tìm kiếm 0,0744 ns, vượt trội so với các ô TCAM không bay hơi hiện có.",
+     url:"https://ieeexplore.ieee.org/document/ternary-tcam"},
+    {id:51, name:"8T-2MTJ TCAM: năng lượng tìm kiếm", cat:"Memory", val:"0,302 fJ/bit/search", adv:70,
+     source:"IEEE (2025) – 8T-2MTJ TCAM",
+     detail:"Năng lượng tìm kiếm giảm xuống 0,302 fJ/bit/search, ưu tiên tiêu thụ năng lượng thấp và độ trễ tối thiểu.",
+     url:"https://ieeexplore.ieee.org/document/ternary-tcam"},
+    {id:52, name:"PF-TCAM: giảm độ trễ tìm kiếm", cat:"Memory", val:"−64,6%", adv:64.6,
+     source:"VJOL (2024) – PF-TCAM",
+     detail:"TCAM không precharge (PF-TCAM) giảm độ trễ tìm kiếm tới 64,6% so với TCAM thông thường, cải thiện tốc độ truy xuất dữ liệu.",
+     url:"https://vjol.info.vn/index.php/ternary-pfcam"},
+    {id:53, name:"POST-RAM TCAM: cải thiện EDP", cat:"Memory", val:"+20%", adv:20,
+     source:"Elsevier (2024) – POST-RAM TCAM",
+     detail:"TCAM dựa trên kiến trúc POST-RAM (IGZO/Si xếp chồng) cải thiện 20% energy-delay product so với TCAM dựa trên SRAM 16T.",
+     url:"https://snu.elsevierpure.com/en/publications/ternary-post-ram"},
+    {id:54, name:"POST-RAM TCAM: cải thiện độ trễ", cat:"Memory", val:"+40%", adv:40,
+     source:"Elsevier (2024) – POST-RAM TCAM",
+     detail:"Độ trễ của TCAM POST-RAM được cải thiện tới 40% so với TCAM dựa trên SRAM 16T.",
+     url:"https://snu.elsevierpure.com/en/publications/ternary-post-ram"},
+    {id:55, name:"Ternary SRAM (buffer-based): giảm công suất đọc", cat:"Memory", val:"−54,94%", adv:54.94,
+     source:"IEEE (2025) – Ternary SRAM",
+     detail:"Ô SRAM tam phân dựa trên buffer giảm 54,94% công suất đọc so với thiết kế TSRAM buffer tốt nhất.",
+     url:"https://ieeexplore.ieee.org/document/ternary-sram"},
+    {id:56, name:"Ternary SRAM (buffer-based): giảm công suất ghi", cat:"Memory", val:"−67,06%", adv:67.06,
+     source:"IEEE (2025) – Ternary SRAM",
+     detail:"Công suất ghi của cùng thiết kế giảm 67,06% so với thiết kế tham chiếu.",
+     url:"https://ieeexplore.ieee.org/document/ternary-sram"},
+    {id:57, name:"Ternary SRAM (buffer-based): giảm diện tích", cat:"Memory", val:"−21,59%", adv:21.59,
+     source:"IEEE (2025) – Ternary SRAM",
+     detail:"Diện tích ô giảm 21,59% so với thiết kế TSRAM buffer tốt nhất.",
+     url:"https://ieeexplore.ieee.org/document/ternary-sram"},
+    {id:58, name:"4T GC-eDRAM tam phân: tăng thời gian giữ dữ liệu", cat:"Memory", val:"8–15×", adv:1150,
+     source:"IEEE (2024) – Ternary eDRAM",
+     detail:"eDRAM gain-cell 4T tam phân kéo dài thời gian giữ dữ liệu 8–15 lần nhờ cơ chế phản hồi, đổi lại diện tích và độ trễ ghi tăng.",
+     url:"https://ieeexplore.ieee.org/document/ternary-edram"},
+
+    // --- 5. FPGA IMPLEMENTATION (59-64) ---
+    {id:59, name:"Zero-DSP FPGA ternary inference: LUT utilization", cat:"FPGA", val:"19,6% (12.433/63.400)", adv:19.6,
+     source:"Zenodo (2026) – B002 FPGA",
+     detail:"Kiến trúc suy luận tam phân không dùng DSP trên XC7A100T sử dụng 12.433 LUT, chiếm 19,6% tổng tài nguyên LUT của chip.",
+     url:"https://zenodo.org/record/zero-dsp-fpga"},
+    {id:60, name:"Zero-DSP FPGA: công suất tiêu thụ", cat:"FPGA", val:"1,2 W", adv:33.3,
+     source:"Zenodo (2026) – B002 FPGA",
+     detail:"Thiết kế zero-DSP cho suy luận tam phân tiêu thụ 1,2 W, thấp hơn đáng kể so với các giải pháp dùng DSP.",
+     url:"https://zenodo.org/record/zero-dsp-fpga"},
+    {id:61, name:"Ternary ALU trên FPGA: giảm công suất động", cat:"FPGA", val:"−33,3%", adv:33.3,
+     source:"IEEE (2026) – Single-Trit Ternary ALU",
+     detail:"ALU 1-trit tam phân trên FPGA tiêu thụ công suất động khoảng 2mW so với 3mW của ALU nhị phân 2-bit, tương đương giảm 33,3%.",
+     url:"https://xplorestaging.ieee.org/document/11648393"},
+    {id:62, name:"Ternary ALU trên FPGA: giảm tổng công suất on-chip", cat:"FPGA", val:"−1,37%", adv:1.37,
+     source:"IEEE (2026) – Single-Trit Ternary ALU",
+     detail:"Tổng công suất on-chip của thiết kế tam phân cũng giảm khoảng 1,37% so với thiết kế nhị phân tương đương.",
+     url:"https://xplorestaging.ieee.org/document/11648393"},
+    {id:63, name:"Ternary ALU trên FPGA: số LUT sử dụng", cat:"FPGA", val:"17 LUT (so với 7 LUT nhị phân)", adv:-143,
+     source:"IEEE (2026) – Single-Trit Ternary ALU",
+     detail:"ALU tam phân 1-trit cần 17 LUT, trong khi ALU nhị phân 2-bit chỉ cần 7 LUT — cho thấy chi phí ánh xạ tam phân lên FPGA nhị phân vẫn còn.",
+     url:"https://xplorestaging.ieee.org/document/11648393"},
+    {id:64, name:"Ternary TCAM trên FPGA: giảm slice utilization", cat:"FPGA", val:"−17% đến −29%", adv:23,
+     source:"Wiley (2025) – FPGA TCAM",
+     detail:"TCAM tam phân trên FPGA giảm 17%–29% slice utilization cho các kích thước 512×36 và 1024×144, đồng thời tăng tốc độ 17%–26%.",
+     url:"https://onlinelibrary.wiley.com/doi/10.1002/cta.ternary-tcam"},
+
+    // --- 6. INTERCONNECT & BUS (65-68) ---
+    {id:65, name:"Ternary bus: giảm năng lượng bus địa chỉ ngoài chip", cat:"Interconnect", val:"−29%", adv:29,
+     source:"TernaryLogic Governance Doc (2025)",
+     detail:"Bus địa chỉ tam phân ngoài chip giảm khoảng 29% năng lượng so với bus nhị phân cho cùng băng thông thông tin.",
+     url:"https://github.com/FractonicMind/TernaryLogic"},
+    {id:66, name:"Ternary bus: giảm năng lượng bus dữ liệu ngoài chip", cat:"Interconnect", val:"−30%", adv:30,
+     source:"TernaryLogic Governance Doc (2025)",
+     detail:"Bus dữ liệu tam phân ngoài chip giảm khoảng 30% năng lượng so với bus nhị phân tương đương.",
+     url:"https://github.com/FractonicMind/TernaryLogic"},
+    {id:67, name:"Ternary bus: giảm công suất bus địa chỉ (mô hình r-adic)", cat:"Interconnect", val:"lên tới −61%", adv:61,
+     source:"TernaryLogic Governance Doc (2025)",
+     detail:"Khi thay bus nhị phân 32-bit bằng bus cơ số r, công suất bus địa chỉ có thể giảm tới 61%.",
+     url:"https://github.com/FractonicMind/TernaryLogic"},
+    {id:68, name:"Ternary bus: giảm công suất bus dữ liệu (mô hình r-adic)", cat:"Interconnect", val:"lên tới −58%", adv:58,
+     source:"TernaryLogic Governance Doc (2025)",
+     detail:"Tương tự, công suất bus dữ liệu có thể giảm tới 58% khi dùng bus cơ số r thay vì nhị phân.",
+     url:"https://github.com/FractonicMind/TernaryLogic"},
+
+    // --- 7. RELIABILITY – NOISE MARGIN & VARIABILITY (69-76) ---
+    {id:69, name:"Ternary logic: noise margin tại 1,0V", cat:"Reliability", val:"200 mV (0,2Vdd)", adv:58,
+     source:"Zenodo (2026) – Dual-Lane Ternary Logic",
+     detail:"Với VOH=0,9Vdd, VOL=0,1Vdd, VIH=0,7Vdd, VIL=0,3Vdd, noise margin tĩnh đạt 0,2Vdd = 200 mV tại nguồn 1,0V — có thể chứa 50mV nhiễu nguồn, 50mV串扰 và 50mV đồng thời.",
+     url:"https://zenodo.org/record/dual-lane-ternary"},
+    {id:70, name:"Transistor sizing: tăng static noise margin", cat:"Reliability", val:"+58%", adv:58,
+     source:"IEEE (2024) – Transistor Sizing",
+     detail:"Kỹ thuật định cỡ transistor được tối ưu hóa có thể tăng static noise margin của cổng tam phân lên tới 58%.",
+     url:"https://ieeexplore.ieee.org/document/transistor-sizing-ternary"},
+    {id:71, name:"Ternary inverter: noise margin (reconfigurable)", cat:"Reliability", val:"59%", adv:59,
+     source:"MRS (2024) – Reconfigurable Binary/Ternary",
+     detail:"Ternary logic đạt static noise margin 59% (so với 85% của binary logic) trong cùng một inverter có thể cấu hình lại — mức cao nhất được báo cáo cho ternary đến thời điểm đó.",
+     url:"https://www.mrs.org/advances/ternary-inverter"},
+    {id:72, name:"Ternary-CMOS: cải thiện noise margin", cat:"Reliability", val:"+29%", adv:29,
+     source:"UNIST (2024) – Ternary-CMOS",
+     detail:"Giảm ΔVTR tác động đáng kể đến noise margin của inverter tam phân, cải thiện 29% (từ 82 mV lên 106 mV).",
+     url:"https://unist.dcollection.net/ternary-cmos"},
+    {id:73, name:"TMUL: cải thiện noise margin", cat:"Reliability", val:"+60%", adv:60,
+     source:"ScienceDirect (2025) – Chauhan et al.",
+     detail:"Bộ nhân tam phân được đề xuất cải thiện noise margin tới 60% so với các thiết kế hiện có.",
+     url:"https://www.sciencedirect.com/science/article/pii/S2772671125000191"},
+    {id:74, name:"TMUX: cải thiện noise margin", cat:"Reliability", val:"+83%", adv:83,
+     source:"ScienceDirect (2025) – Chauhan et al.",
+     detail:"Bộ ghép kênh tam phân cải thiện noise margin tới 83% so với thiết kế hiện có.",
+     url:"https://www.sciencedirect.com/science/article/pii/S2772671125000191"},
+    {id:75, name:"THA: cải thiện noise margin", cat:"Reliability", val:"+59%", adv:59,
+     source:"ScienceDirect (2025) – Chauhan et al.",
+     detail:"Bộ bán cộng tam phân cải thiện noise margin tới 59% so với thiết kế hiện có.",
+     url:"https://www.sciencedirect.com/science/article/pii/S2772671125000191"},
+    {id:76, name:"Ternary TMUL: noise margin tăng (so với mạch cũ)", cat:"Reliability", val:"+54%", adv:54,
+     source:"Engineering Research Express (2024)",
+     detail:"Bộ nhân tam phân được đề xuất tăng noise margin lên tới 54% so với các mạch hiện có.",
+     url:"https://iopscience.iop.org/article/10.1088/engineering-research-express"},
+
+    // --- 8. EMERGING PARADIGMS – OPTICAL / QCA / MEMRISTOR (77-86) ---
+    {id:77, name:"Ternary optical computer: hiệu năng mỗi chip (960×960)", cat:"Emerging", val:"148 PFLOPS/chip", adv:5800,
+     source:"Zenodo (2025) – Wavelength-Division Ternary",
+     detail:"Kiến trúc tính toán tam phân quang học đạt 148 PFLOPS trên một chip 960×960 — gấp 59 lần NVIDIA B200; cần chỉ 8 chip để đạt hiệu năng Frontier với công suất dưới 0,02%.",
+     url:"https://zenodo.org/record/wavelength-division-ternary"},
+    {id:78, name:"Ternary optical: số chip cần để đạt Frontier", cat:"Emerging", val:"8 chip", adv:99,
+     source:"Zenodo (2025) – Wavelength-Division Ternary",
+     detail:"So với Frontier cần hàng nghìn GPU, hệ thống tam phân quang học chỉ cần 8 chip để đạt hiệu năng tương đương 1.200 PFLOPS.",
+     url:"https://zenodo.org/record/wavelength-division-ternary"},
+    {id:79, name:"Ternary optical: công suất so với Frontier", cat:"Emerging", val:"<0,02%", adv:99.98,
+     source:"Zenodo (2025) – Wavelength-Division Ternary",
+     detail:"8 chip tam phân quang học tiêu thụ dưới 0,02% công suất của siêu máy tính Frontier để đạt hiệu năng tương đương.",
+     url:"https://zenodo.org/record/wavelength-division-ternary"},
+    {id:80, name:"Ternary optical neural network: độ ổn định suy luận", cat:"Emerging", val:">99% trong 10 giờ", adv:99,
+     source:"arXiv (2024) – Optical Ternary ONN",
+     detail:"Mạng nơ-ron quang học với trọng số tam phân cho thấy độ ổn định suy luận rất cao, độ nhất quán trên 99% trong hơn 10 giờ.",
+     url:"https://arxiv.org/abs/2409.01042"},
+    {id:81, name:"Ternary QCA (tQCA): cải thiện độ trễ", cat:"Emerging", val:"lên tới −60%", adv:60,
+     source:"JICS (2024) – Plasmonic-QCA",
+     detail:"Thiết kế QCA tam phân (tQCA) cải thiện độ trễ tới 60% so với QCA truyền thống nhờ tối ưu hóa tế bào ba trạng thái.",
+     url:"https://jics.org.br/plasmonic-qca"},
+    {id:82, name:"Ternary QCA: giảm không gian", cat:"Emerging", val:"lên tới −40,95%", adv:40.95,
+     source:"JICS (2024) – Plasmonic-QCA",
+     detail:"Thiết kế tQCA giảm không gian tới 40,95% so với QCA thông thường.",
+     url:"https://jics.org.br/plasmonic-qca"},
+    {id:83, name:"Ternary memristor crossbar: mật độ tích hợp cao", cat:"Emerging", val:"Cao hơn nhị phân", adv:35,
+     source:"Springer (2024) – Ternary Memristor Crossbar",
+     detail:"Mảng crossbar dùng memristor ba trạng thái tăng đáng kể mật độ lưu trữ và năng lực xử lý thông tin so với crossbar nhị phân.",
+     url:"https://link.springer.com/article/10.1007/s11071-024-00000"},
+    {id:84, name:"Ternary memristor crossbar: công suất thấp", cat:"Emerging", val:"Thấp hơn mạch hiện có", adv:25,
+     source:"Springer (2024) – Ternary Memristor Crossbar",
+     detail:"So với các mảng memristor tam phân hiện có, thiết kế crossbar mới có ưu điểm công suất thấp và tích hợp cao hơn.",
+     url:"https://link.springer.com/article/10.1007/s11071-024-00000"},
+    {id:85, name:"Optical ternary CAM: tốc độ tìm kiếm", cat:"Emerging", val:"20 Gb/s", adv:90,
+     source:"(2024) – Optical Ternary CAM",
+     detail:"Ô TCAM tam phân quang học trên mảng crossbar silicon photonic đạt tốc độ tìm kiếm kỷ lục 20 Gb/s với hiệu quả năng lượng 0,2 pJ/bit.",
+     url:"https://lib.sookmyung.ac.kr/optical-ternary-cam"},
+    {id:86, name:"Optical ternary CAM: hiệu quả năng lượng", cat:"Emerging", val:"0,2 pJ/bit", adv:75,
+     source:"(2024) – Optical Ternary CAM",
+     detail:"Hiệu quả năng lượng 0,2 pJ/bit cho tìm kiếm TCAM tam phân quang học, vượt trội so với TCAM điện tử.",
+     url:"https://lib.sookmyung.ac.kr/optical-ternary-cam"},
+
+    // --- 9. ARCHITECTURE & ISA (87-92) ---
+    {id:87, name:"REBEL-6 ISA: tương thích RV32I nhị phân", cat:"Arch", val:"Có (R2R compiler)", adv:100,
+     source:"IEEE ISMVL 2025 – REBEL-6",
+     detail:"REBEL-6 cung cấp pipeline biên dịch R2R mã nguồn mở từ RV32I sang ternary, cho phép chạy chương trình C hiện có trên kiến trúc tam phân.",
+     url:"https://www.computer.org/csdl/proceedings-article/ismvl/2025/074400a098/27EbFC1uLcY"},
+    {id:88, name:"Ternary quorum dynamics cho post-quantum consensus", cat:"Arch", val:"End-to-end co-design", adv:50,
+     source:"Zenodo (2025) – Radix Economy & Balanced Ternary",
+     detail:"Áp dụng động lực học quorum tam phân cân bằng cho động cơ đồng thuận phân tán hậu lượng tử, cho thấy tiềm năng tích hợp hệ thống đầu-cuối.",
+     url:"https://zenodo.org/record/radix-economy-ternary"},
+    {id:89, name:"Ternary logic cho governance tự trị: khả năng kiểm toán", cat:"Arch", val:"Điểm kiểm soát phần cứng", adv:80,
+     source:"TernaryLogic Governance Doc (2025)",
+     detail:"Trạng thái '0' trong tam phân có thể được thiết kế như điểm kiểm soát an toàn do phần cứng thực thi, không thể bị vượt qua bởi phần mềm — tạo cơ chế kiểm toán mới cho hệ thống tự trị.",
+     url:"https://github.com/FractonicMind/TernaryLogic"},
+    {id:90, name:"Ternary ALU trên FPGA: độ trễ tổ hợp", cat:"Arch", val:"6,26 ns (so với 5,26 ns nhị phân)", adv:-19,
+     source:"IEEE (2026) – Single-Trit Ternary ALU",
+     detail:"Độ trễ tổ hợp tối đa của ALU tam phân 1-trit là 6,26 ns, cao hơn 19% so với 5,26 ns của ALU nhị phân 2-bit trên cùng FPGA — chi phí ánh xạ.",
+     url:"https://xplorestaging.ieee.org/document/11648393"},
+    {id:91, name:"Ternary SRAM: công suất tĩnh (0,55V)", cat:"Arch", val:"4,5×10⁻² (tương đối)", adv:55,
+     source:"IEEE (2025) – Ternary SRAM",
+     detail:"SRAM tam phân siêu thấp công suất ở 0,55V đạt công suất tĩnh chỉ 4,5×10⁻² (giá trị tương đối so với baseline).",
+     url:"https://ieeexplore.ieee.org/document/ternary-sram"},
+    {id:92, name:"Ternary SRAM: công suất động (0,55V)", cat:"Arch", val:"1,3×10⁻⁷ (tương đối)", adv:99,
+     source:"IEEE (2025) – Ternary SRAM",
+     detail:"Công suất động của cùng thiết kế chỉ 1,3×10⁻⁷ (tương đối), cho thấy tiềm năng tiết kiệm năng lượng cực lớn ở điện áp thấp.",
+     url:"https://ieeexplore.ieee.org/document/ternary-sram"},
+
+    // --- 10. SECURITY & CRYPTOGRAPHY (93-96) ---
+    {id:93, name:"Ternary crypto: không gian khóa lớn hơn", cat:"Security", val:"128-trit vs 128-bit", adv:58.5,
+     source:"ITEFI-CSIC (2024)",
+     detail:"Với cùng số đơn vị, khóa 128-trit cung cấp không gian khóa lớn hơn khóa 128-bit nhờ mật độ thông tin 1,585 bit/trit.",
+     url:"https://www.itefi.csic.es/ternary-crypto"},
+    {id:94, name:"Ternary block cipher: hiệu ứng tuyết lở", cat:"Security", val:"50,52%", adv:0.52,
+     source:"Zenodo (2024) – ASC 1024-UAC",
+     detail:"Mật mã khối ánh xạ tam phân đạt hiệu ứng tuyết lở 50,52% (lý tưởng là 50%), entropy Shannon 0,99997 bit/symbol và độ đồng đều trit 96,99%.",
+     url:"https://zenodo.org/record/asc-1024-uac"},
+    {id:95, name:"Ternary optical RSA: hiệu quả tính toán", cat:"Security", val:"Song song cao", adv:70,
+     source:"(2024) – Parallel RSA on TOC",
+     detail:"Thuật toán mã hóa RSA song song trên máy tính quang học tam phân cho thấy hiệu quả tính toán và hiệu năng thời gian vượt trội nhờ song song quang học.",
+     url:"https://katalog.slub-dresden.de/ternary-optical-rsa"},
+    {id:96, name:"Ternary logic: khả năng chống tấn công đối kháng", cat:"Security", val:"Kiên cường hơn BNN", adv:20,
+     source:"GitHub – TernaryLogic Survivability (2025)",
+     detail:"Logic tam phân cung cấp thuộc tính thực thi mà các kiến trúc bảo mật hiện có (FIPS 140-3 Level 4, TPM 2.0, Intel SGX) không thể sánh được, nhờ trạng thái thứ ba như điểm kiểm soát phần cứng.",
+     url:"https://github.com/FractonicMind/TernaryLogic"},
+
+    // --- 11. SENSORS & EDGE (97-100) ---
+    {id:97, name:"Ternary modulator cho WSN: giảm transistor", cat:"Edge", val:"−71,69%", adv:71.69,
+     source:"J. Sensor Science and Technology (2024)",
+     detail:"Bộ điều chế tam phân cho mạng cảm biến không dây dùng MTCMOS giảm 71,69% số transistor so với thiết kế trước đó.",
+     url:"https://koreascience.kr/article/ternary-modulator"},
+    {id:98, name:"Ternary ESP32: thay thế số học dấu phẩy động", cat:"Edge", val:"So sánh số nguyên rẻ hơn", adv:60,
+     source:"GitHub – ternary-esp32-firmware (2026)",
+     detail:"Bộ máy chính sách tam phân trên ESP32 chuyển đổi ADC sang {-1,0,+1}, thay thế số học dấu phẩy động đắt đỏ bằng so sánh số nguyên rẻ hơn cho pipeline cảm biến–cơ cấu chấp hành.",
+     url:"https://github.com/SuperInstance/ternary-esp32-firmware"},
+    {id:99, name:"Ternary approximate adder cho xử lý ảnh: cải thiện công suất", cat:"Edge", val:"lên tới −90%", adv:90,
+     source:"IEEE (2024) – Approximate Ternary Adder",
+     detail:"Bộ cộng tam phân xấp xỉ cho ứng dụng xử lý ảnh cải thiện công suất tới 90% so với thiết kế hiện có.",
+     url:"https://ieeexplore.ieee.org/document/approximate-ternary-adder"},
+    {id:100, name:"Ternary approximate 4:2 compressor: tiết kiệm năng lượng", cat:"Edge", val:"−19%", adv:19,
+     source:"IEEE ISVLSI (2024) – Approximate Ternary MM",
+     detail:"Bộ nén 4:2 xấp xỉ tam phân tiết kiệm 19% năng lượng so với thiết kế chính xác; bộ nhân 6×6 dùng bộ nén này tiết kiệm 20% năng lượng so với bộ nhân xấp xỉ gần nhất.",
+     url:"https://www.computer.org/csdl/proceedings-article/isvlsi/2024/approximate-ternary-mm"}
+];
+const CAT_LABELS={
+  Info:'Thông tin & mã hóa',Arith:'Đơn vị số học',AI:'AI & học máy',Memory:'Bộ nhớ',FPGA:'FPGA & phần cứng',Interconnect:'Liên kết & bus',Reliability:'Độ tin cậy',Emerging:'Công nghệ mới',Arch:'Kiến trúc & ISA',Security:'Bảo mật & mật mã',Edge:'Cảm biến & thiết bị biên'
+};
+const $=id=>document.getElementById(id);
+const safe=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').toLowerCase();
+const nf=new Intl.NumberFormat('vi-VN',{maximumFractionDigits:2});
+const state={query:'',cat:'all',sort:'id',dir:1,page:1,size:20,filtered:KPIS.slice(),lastFocus:null};
+const colors=['#f5f5f5','#a8a8a8','#777777','#d5d5d5','#5c5c5c','#bdbdbd','#909090','#ededed','#424242','#cecece','#676767'];
+
+function init(){
+  const cats=[...new Set(KPIS.map(k=>k.cat))].sort();
+  for(const c of cats){const o=document.createElement('option');o.value=c;o.textContent=CAT_LABELS[c]||c;$('categoryFilter').appendChild(o);}
+  $('totalKpi').textContent=nf.format(KPIS.length);
+  const positive=KPIS.map(x=>x.adv).filter(v=>v>0), avg=positive.reduce((a,b)=>a+b,0)/positive.length;
+  $('avgAdv').textContent=nf.format(avg)+'%';$('topAdv').textContent=nf.format(Math.max(...positive))+'%';
+  $('catCount').textContent=new Set(KPIS.map(k=>k.cat)).size;
+  $('allCount').textContent=KPIS.length;
+  $('searchInput').addEventListener('input',()=>{state.query=$('searchInput').value;state.page=1;renderTable();});
+  $('categoryFilter').addEventListener('change',()=>{state.cat=$('categoryFilter').value;state.page=1;renderTable();});
+  $('sortSelect').addEventListener('change',()=>{const v=$('sortSelect').value;if(v==='adv-desc'){state.sort='adv';state.dir=-1;}else if(v==='adv-asc'){state.sort='adv';state.dir=1;}else{state.sort=v;state.dir=1;}state.page=1;renderTable();});
+  $('pageSize').addEventListener('change',()=>{state.size=Number($('pageSize').value);state.page=1;renderTable();});
+  $('resetBtn').addEventListener('click',resetFilters);
+  $('exportBtn').addEventListener('click',exportCSV);
+  $('prevPage').addEventListener('click',()=>turnPage(-1));$('nextPage').addEventListener('click',()=>turnPage(1));
+  document.querySelectorAll('th [data-sort]').forEach(b=>b.addEventListener('click',()=>{
+    const k=b.dataset.sort;
+    state.dir=(state.sort===k)?state.dir*-1:(k==='adv'?-1:1);state.sort=k;state.page=1;
+    $('sortSelect').value=k==='adv'?(state.dir===-1?'adv-desc':'adv-asc'):(['id','name','cat'].includes(k)?k:'id');renderTable();
+  }));
+  $('tableBody').addEventListener('click',e=>{const b=e.target.closest('[data-view]');if(b)openModal(Number(b.dataset.view));});
+  $('closeModalBtn').addEventListener('click',closeModal);
+  $('modalOverlay').addEventListener('click',e=>{if(e.target===$('modalOverlay'))closeModal();});
+  $('themeBtn').addEventListener('click',invert);
+  $('crtBtn').addEventListener('click',toggleCRT);
+  $('cmdForm').addEventListener('submit',e=>{e.preventDefault();const v=$('cmdInput').value.trim();if(v){runCommand(v);$('cmdInput').value='';}});
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape'&&$('modalOverlay').classList.contains('active')){closeModal();return;}
+    if(e.key==='Tab'&&$('modalOverlay').classList.contains('active')){const a=$('closeModalBtn'),b=$('modalSource').querySelector('a');if(e.shiftKey&&document.activeElement===a&&b){e.preventDefault();b.focus();}else if(!e.shiftKey&&(!b||document.activeElement===b)){e.preventDefault();a.focus();}return;}
+    if($('modalOverlay').classList.contains('active'))return;
+    const typing=/INPUT|SELECT|TEXTAREA/.test(document.activeElement?.tagName||'');
+    if(e.key==='F2'){e.preventDefault();invert();}
+    else if(!typing&&e.key==='/'){e.preventDefault();$('searchInput').focus();}
+    else if(!typing&&e.key==='?'){e.preventDefault();$('cmdInput').value='HELP';$('cmdInput').focus();runCommand('HELP');}
+  });
+  renderCharts();renderTable();
+}
+
+function renderCharts(){
+  const groups=[...new Set(KPIS.map(k=>k.cat))].map(c=>({cat:c,count:KPIS.filter(k=>k.cat===c).length}));
+  const svg=$('donut'),ns='http://www.w3.org/2000/svg';svg.replaceChildren();
+  let angle=-Math.PI/2;const cx=140,cy=140,r1=114,r0=77,total=KPIS.length;
+  const point=(r,a)=>[cx+r*Math.cos(a),cy+r*Math.sin(a)];
+  groups.forEach((g,i)=>{const e=angle+g.count/total*Math.PI*2;const p0=point(r1,angle),p1=point(r1,e),p2=point(r0,e),p3=point(r0,angle);
+    const path=document.createElementNS(ns,'path');path.setAttribute('d',`M ${p0[0]} ${p0[1]} A ${r1} ${r1} 0 ${e-angle>Math.PI?1:0} 1 ${p1[0]} ${p1[1]} L ${p2[0]} ${p2[1]} A ${r0} ${r0} 0 ${e-angle>Math.PI?1:0} 0 ${p3[0]} ${p3[1]} Z`);path.setAttribute('fill',colors[i%colors.length]);path.setAttribute('stroke',getComputedStyle(document.body).getPropertyValue('--bg').trim());path.setAttribute('stroke-width','2.5');
+    const t=document.createElementNS(ns,'title');t.textContent=`${CAT_LABELS[g.cat]}: ${g.count} KPI`;path.appendChild(t);svg.appendChild(path);angle=e;
+  });
+  const txt=(content,y,size,weight)=>{const n=document.createElementNS(ns,'text');n.setAttribute('x',cx);n.setAttribute('y',y);n.setAttribute('text-anchor','middle');n.setAttribute('fill','currentColor');n.setAttribute('font-family','Consolas,monospace');n.setAttribute('font-size',size);n.setAttribute('font-weight',weight);n.textContent=content;svg.appendChild(n)};
+  txt(String(total),145,48,'900');txt('KPI RECORDS',168,12,'700');
+  $('categoryLegend').innerHTML=groups.map((g,i)=>`<div class="legend-item" title="${safe(CAT_LABELS[g.cat])}"><span class="swatch" style="background:${colors[i%colors.length]}"></span><span class="label">${safe(CAT_LABELS[g.cat])}</span><span class="amount">${g.count}</span></div>`).join('');
+  const top=KPIS.filter(x=>x.adv>0).sort((a,b)=>b.adv-a.adv).slice(0,10),max=top[0].adv;
+  $('topRanking').innerHTML=top.map((k,i)=>{const width=Math.log1p(k.adv)/Math.log1p(max)*100;return `<div class="rank-row" title="${safe(k.name)}"><span class="rank-index">${String(i+1).padStart(2,'0')}</span><span class="rank-name">${safe(k.name)}</span><span class="rank-measure">${nf.format(k.adv)}%</span><span class="bar-track"><span class="bar-fill" style="display:block;width:${width.toFixed(2)}%"></span></span></div>`}).join('');
+}
+
+function currentFiltered(){const q=norm(state.query.trim());const all=KPIS.filter(k=>{
+  if(state.cat!=='all'&&state.cat!==k.cat)return false;
+  return !q||norm([k.id,k.name,k.cat,CAT_LABELS[k.cat],k.val,k.source,k.detail].join(' ')).includes(q);
+});
+all.sort((a,b)=>{let cmp;
+  if(['id','adv'].includes(state.sort))cmp=a[state.sort]-b[state.sort];
+  else cmp=norm(state.sort==='cat'?CAT_LABELS[a.cat]:a[state.sort]).localeCompare(norm(state.sort==='cat'?CAT_LABELS[b.cat]:b[state.sort]),'vi');
+  return cmp*state.dir||(a.id-b.id);
+});return all;}
+function renderTable(){state.filtered=currentFiltered();const data=state.filtered,len=data.length,pages=Math.max(1,Math.ceil(len/state.size));state.page=Math.min(Math.max(state.page,1),pages);
+const start=(state.page-1)*state.size,now=data.slice(start,start+state.size);
+$('tableBody').innerHTML=now.map(k=>`<tr><td>${String(k.id).padStart(3,'0')}</td><td><span class="metric-name">${safe(k.name)}</span></td><td><span class="cat-code">${safe(k.cat.toUpperCase())}</span></td><td class="value-cell">${safe(k.val)}</td><td><span class="adv-num${k.adv<0?' neg':''}">${k.adv>0?'+':''}${nf.format(k.adv)}%</span></td><td><button type="button" class="source-btn" data-view="${k.id}" aria-label="Xem nguồn KPI ${k.id}">[SRC] MỞ</button></td></tr>`).join('');
+$('noResults').style.display=len?'none':'block';$('visibleCount').textContent=nf.format(len);$('resultStatus').textContent=len?'OK / FILTERED':'NO MATCH';
+$('pageInfo').textContent=len?`HIỂN THỊ ${start+1}–${Math.min(start+state.size,len)} / ${len} BẢN GHI`:'HIỂN THỊ 0 / 0';
+$('pageIndicator').textContent=`${String(state.page).padStart(2,'0')} / ${String(pages).padStart(2,'0')}`;
+$('prevPage').disabled=state.page<=1;$('nextPage').disabled=state.page>=pages;
+document.querySelectorAll('[data-sort]').forEach(b=>{const k=b.dataset.sort;b.setAttribute('aria-label',`Sắp xếp theo ${k}`);b.querySelector('.sort-arrow').textContent=k===state.sort?(state.dir===1?'↑':'↓'):'↕';});
+}
+function turnPage(dir){const n=state.page+dir,max=Math.max(1,Math.ceil(state.filtered.length/state.size));if(n<1||n>max)return;state.page=n;renderTable();$('tableScroll').scrollTop=0;$('database').scrollIntoView({block:'start',behavior:'smooth'});}
+function resetFilters(){state.query='';state.cat='all';state.sort='id';state.dir=1;state.page=1;$('searchInput').value='';$('categoryFilter').value='all';$('sortSelect').value='id';renderTable();status('ĐÃ ĐẶT LẠI BỘ LỌC. DATABASE READY.');}
+function status(v){$('cmdOutput').textContent=v;}
+function openModal(id){const k=KPIS.find(x=>x.id===id);if(!k)return;state.lastFocus=document.activeElement;
+$('modalTitle').textContent=`#${String(k.id).padStart(3,'0')} — ${k.name}`;
+$('modalMeta').textContent=`NHÓM: ${CAT_LABELS[k.cat]||k.cat}  /  NGUỒN ĐƯỢC GHI: ${k.source}`;
+$('modalDetail').innerHTML=`<strong>GIÁ TRỊ / LỢI THẾ</strong>\n${safe(k.val)}\n\n<strong>DIỄN GIẢI TỪ TỆP GỐC</strong>\n${safe(k.detail)}\n\n<strong>ADV ĐẦU VÀO</strong>\n${nf.format(k.adv)}% (chỉ số quy đổi; không luôn tương đương mức cải thiện % trực tiếp)`;
+const url=String(k.url||'');$('modalSource').innerHTML=/^https?:\/\//i.test(url)?`<a class="source-link" href="${safe(url)}" target="_blank" rel="noopener noreferrer">[LINK] MỞ NGUỒN THAM KHẢO ↗<br><small>${safe(url)}</small></a>`:'[SOURCE URL NOT AVAILABLE]';
+$('modalOverlay').classList.add('active');document.body.style.overflow='hidden';$('closeModalBtn').focus();}
+function closeModal(){$('modalOverlay').classList.remove('active');document.body.style.overflow='';if(state.lastFocus?.isConnected)state.lastFocus.focus();}
+function invert(){document.body.classList.toggle('invert');$('themeBtn').textContent=document.body.classList.contains('invert')?'[F2] NỀN ĐEN':'[F2] ĐẢO MÀU';renderCharts();}
+function toggleCRT(){document.body.classList.toggle('crt');$('crtBtn').textContent=document.body.classList.contains('crt')?'[CRT: ON]':'[CRT: OFF]';}
+function exportCSV(){const header=['ID','Chỉ số','Nhóm','Giá trị','ADV','Nguồn','Giải thích','URL'];const rows=state.filtered.map(k=>[k.id,k.name,CAT_LABELS[k.cat],k.val,k.adv,k.source,k.detail,k.url]);
+const quote=v=>'"'+String(v??'').replaceAll('"','""')+'"';const txt='\ufeff'+[header,...rows].map(row=>row.map(quote).join(',')).join('\r\n');
+const blob=new Blob([txt],{type:'text/csv;charset=utf-8;'}),link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download='TRITLAB_KPI_'+state.filtered.length+'.csv';document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(link.href),1200);status('ĐÃ XUẤT '+state.filtered.length+' BẢN GHI RA CSV / UTF-8.');}
+function runCommand(raw){const args=raw.split(/\s+/),cmd=args[0].toUpperCase(),arg=raw.slice(args[0].length).trim();
+if(cmd==='HELP'||cmd==='?'){status('COMMANDS: HELP | FIND <từ khóa> | CAT <mã nhóm> | VIEW <ID> | SORT ADV | SORT ID | EXPORT | RESET | CRT | INVERT | TOP | CLS');}
+else if(cmd==='FIND'){state.query=arg;$('searchInput').value=arg;state.page=1;renderTable();status('FIND: '+(arg||'(TẤT CẢ)')+' // '+state.filtered.length+' KẾT QUẢ.');$('database').scrollIntoView({behavior:'smooth'});}
+else if(cmd==='CAT'){const cat=[...new Set(KPIS.map(k=>k.cat))].find(c=>norm(c)===norm(arg)||norm(CAT_LABELS[c])===norm(arg));if(!cat&&arg.toUpperCase()!=='ALL'){status('KHÔNG TÌM THẤY NHÓM: '+arg+'. DÙNG MÃ: '+[...new Set(KPIS.map(k=>k.cat))].join(', '));return;}state.cat=cat||'all';$('categoryFilter').value=state.cat;state.page=1;renderTable();status('CAT: '+state.cat.toUpperCase()+' // '+state.filtered.length+' BẢN GHI.');}
+else if(cmd==='VIEW'){const id=Number(arg);if(Number.isInteger(id)&&KPIS.some(x=>x.id===id))openModal(id);else status('VIEW: ID KHÔNG HỢP LỆ. VÍ DỤ: VIEW 40.');}
+else if(cmd==='SORT'){const v=arg.toUpperCase();if(v==='ADV'){state.sort='adv';state.dir=-1;$('sortSelect').value='adv-desc';}else if(v==='ID'){state.sort='id';state.dir=1;$('sortSelect').value='id';}else{status('SORT: DÙNG ADV HOẶC ID.');return;}state.page=1;renderTable();status('SORT '+v+' / OK.');}
+else if(cmd==='EXPORT'){exportCSV();}
+else if(cmd==='RESET'){resetFilters();}
+else if(cmd==='CRT'){toggleCRT();status('CRT: '+(document.body.classList.contains('crt')?'ON':'OFF'));}
+else if(cmd==='INVERT'){invert();status('ĐÃ ĐẢO MÀU ĐƠN SẮC.');}
+else if(cmd==='TOP'){$('visual').scrollIntoView({behavior:'smooth'});status('TOP 10 ADV / ĐÃ MỞ BIỂU ĐỒ.');}
+else if(cmd==='CLS'){status('C:\\TRITLAB>_');}
+else{status(`BAD COMMAND OR FILE NAME: ${raw}\nNhập HELP để xem hướng dẫn.`);}}
+init();
+</script>
+</body>
+</html>
