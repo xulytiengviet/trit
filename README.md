@@ -1,8 +1,9 @@
 # TRITLAB.EXE — Ternary vs Binary KPI
 
-Bảng điều khiển **100 KPI về điện toán tam phân (ternary/trit) và nhị phân (binary/bit)** bằng tiếng Việt, giao diện **MS-DOS đơn sắc trắng–đen**.
+Bảng điều khiển **100 KPI về điện toán tam phân (ternary/trit) và nhị phân (binary/bit)** bằng tiếng Việt, giao diện **Neon Audit DOS — nền đen MS-DOS, chữ neon đa sắc kiểu thám mã/kiểm toán**.
 
 ## Trải nghiệm
+- Nền đen giữ nguyên phong cách MS-DOS cổ điển; chỉ chữ, nhãn và trạng thái thay đổi màu neon (cyan, xanh lá, hồng, tím, vàng, đỏ), không sử dụng nền màu rực.
 - 100 KPI, 11 lĩnh vực; tìm kiếm có hỗ trợ không dấu, lọc nhóm, sắp xếp và phân trang.
 - Biểu đồ SVG tự dựng và bảng dữ liệu; xem giải thích, đường dẫn nguồn theo từng KPI.
 - Dòng lệnh mô phỏng DOS: `HELP`, `FIND`, `CAT`, `VIEW`, `SORT`, `EXPORT`, `RESET`, `CRT`, `INVERT`, `TOP`, `CLS`.
