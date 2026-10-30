@@ -34,3 +34,19 @@ Truy cập [BIỂU DIỄN](https://xulytiengviet.github.io/trit/#representations
 
 **Lưu ý khoa học:** 70 mục không tương đương 70 tiêu chuẩn độc lập. Có các biến thể tên gọi hoặc dữ liệu trùng lặp; một số tuyên bố có giới hạn toán học: 2 bit có 4 trạng thái không thể ánh xạ mất-mát-bằng-không thành 1 trit có 3 trạng thái; 5 trit chỉ mã hóa được 243 giá trị; tryte có độ rộng khác nhau theo kiến trúc. Nguồn loại LIÊN QUAN chỉ là tài liệu nền, không phải bằng chứng trực tiếp cho biến thể.
 
+
+
+## Tab MORSE / TRIT / AUDIO
+
+[Mở phòng thí nghiệm tín hiệu](https://xulytiengviet.github.io/trit/morse.html) — giao diện Neon Audit DOS tự chạy (converter CVNSS4.0 được nhúng offline).
+
+Pipeline trực quan: **Quốc ngữ → CVNSS4.0 v5.0.0-audit-safe → Base27 → 3 balanced trits → Morse → Audio**.
+
+- Dùng nguyên thuật toán CVNSS4.0 audit-safe do người dùng cung cấp, có `selfTest()` 23 phép kiểm tra.
+- Hai chế độ: **TRIT→MORSE** (mã thí nghiệm 2 phần tử/trit, có ranh giới) và **CVNSS→MORSE ITU** (Morse quốc tế cho A–Z).
+- Phát / tạm dừng / dừng; chỉnh tốc độ WPM, tần số âm; waveform, từng ký tự/trit tô sáng theo thời gian.
+- Xuất âm thanh WAV (PCM mono) và sao chép chuỗi Morse; hoàn toàn client-side.
+- Bộ ký tự thử nghiệm: khoảng trắng + A–Z; một ký tự → một số Base27 → 3 trit cân bằng. Ký tự khác được báo rõ là bị bỏ khỏi kênh truyền; giới hạn 64 ký tự/lượt.
+- **Lưu ý khoa học:** TRIT→MORSE là ánh xạ có khung riêng của TRITLAB, *không phải* Morse ITU tiêu chuẩn cho trit. Bộ ba trit bảo toàn chuỗi CVNSS trong phạm vi alphabet nói trên, nhưng CVNSS không luôn bảo toàn khả năng giải mã Quốc ngữ duy nhất.
+
+Tham khảo số học balanced ternary: https://github.com/Trehinos/balanced-ternary#1; quy tắc Morse quốc tế: https://www.itu.int/rec/R-REC-M.1677/en.
