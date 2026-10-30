@@ -21,3 +21,16 @@ Bộ KPI, mô tả và nguồn dẫn được **giữ lại từ tệp HTML gố
 
 ## Giấy phép
 Chưa có giấy phép mã nguồn được công bố trong repository. Liên hệ chủ sở hữu để xin phép tái sử dụng ngoài phạm vi được luật cho phép.
+
+
+## Tab BIỂU DIỄN — 70 cách biểu diễn / encoding ternary
+
+Truy cập [BIỂU DIỄN](https://xulytiengviet.github.io/trit/#representations) để xem 70 bản ghi chia thành **8 nhóm**: ký hiệu/cơ số, balanced ternary, đơn vị & kiến trúc, mã ký tự, đường truyền, dấu phẩy động, chuyển đổi/đóng gói và mã sửa lỗi.
+
+- Tìm kiếm theo tên, mô tả, tài liệu; lọc nhóm và mức đối chiếu nguồn.
+- Mỗi mục có giải thích, nguồn liên kết, trạng thái **TRỰC TIẾP / LIÊN QUAN / CẦN KIỂM CHỨNG**, và cảnh báo kỹ thuật khi cần.
+- 35 mục có tài liệu đối chiếu trực tiếp cho thuật ngữ/chủ đề chính; 22 mục được đánh dấu cần rà soát kỹ thuật. Con số không mang nghĩa đã xác thực mọi tuyên bố.
+- Lưu danh sách đã chú thích trong `data/representations.json` và nguyên bản tài liệu người dùng ở `docs/70-bieu-dien-nguon.md`.
+
+**Lưu ý khoa học:** 70 mục không tương đương 70 tiêu chuẩn độc lập. Có các biến thể tên gọi hoặc dữ liệu trùng lặp; một số tuyên bố có giới hạn toán học: 2 bit có 4 trạng thái không thể ánh xạ mất-mát-bằng-không thành 1 trit có 3 trạng thái; 5 trit chỉ mã hóa được 243 giá trị; tryte có độ rộng khác nhau theo kiến trúc. Nguồn loại LIÊN QUAN chỉ là tài liệu nền, không phải bằng chứng trực tiếp cho biến thể.
+
