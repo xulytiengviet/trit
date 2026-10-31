@@ -50,3 +50,18 @@ Pipeline trực quan: **Quốc ngữ → CVNSS4.0 v5.0.0-audit-safe → Base27 �
 - **Lưu ý khoa học:** TRIT→MORSE là ánh xạ có khung riêng của TRITLAB, *không phải* Morse ITU tiêu chuẩn cho trit. Bộ ba trit bảo toàn chuỗi CVNSS trong phạm vi alphabet nói trên, nhưng CVNSS không luôn bảo toàn khả năng giải mã Quốc ngữ duy nhất.
 
 Tham khảo số học balanced ternary: https://github.com/Trehinos/balanced-ternary#1; quy tắc Morse quốc tế: https://www.itu.int/rec/R-REC-M.1677/en.
+
+
+## Chuyên mục CVNSS4.0 — Base27 × 3 Trit
+
+[Mở phòng thí nghiệm CVNSS4.0](https://xulytiengviet.github.io/trit/cvnss.html) — tab [04] trong điều hướng chung.
+
+- Tận dụng `cvnss-converter.js` tách từ bộ chuyển đổi `v5.0.0-audit-safe` đã có trong `morse.html`, không tự sáng tác lại quy tắc CVNSS4.0.
+- Hai chế độ đầu vào: Quốc ngữ hoặc CVNSS4.0; xuất CVN, CVNSS, chỉ số Base27 và bộ 3 trit cân bằng theo bảng `␠ABCDEFGHIJKLMNOPQRSTUVWXYZ`.
+- Mã ngược `T/0/1 → 0..26 → CVNSS`, kiểm thử vét cạn 27/27 và self-test của converter; thao tác trong trình duyệt, hỗ trợ tải JSON.
+- Bảy hướng nghiên cứu: mã hóa trạng thái, phân cấp 3 × 9, số học balanced ternary, kiểm chứng hình thức, ternary LLM, lưu trữ/IoT và qutrit.
+- Phân biệt rõ: `3 trit = log₂27 ≈ 4,755 bit thông tin`; `1 trit = log₂3 ≈ 1,585 bit`. Việc có đủ 27 mã **không tạo khả năng phát hiện lỗi**, không tự chứng minh nén dữ liệu hay giảm tiêu thụ năng lượng.
+- Bộ mã Base27 ↔ trit bảo toàn tuyệt đối chuỗi CVNSS nằm trong bảng 27 ký hiệu, nhưng **không bảo đảm** giải mã Quốc ngữ duy nhất trong các trường hợp nhập nhằng.
+
+Trang `cvnss.html` cần được phân phối cùng tệp `cvnss-converter.js` khi mở offline. Nguồn mở tham khảo: [Trehinos/balanced-ternary](https://github.com/Trehinos/balanced-ternary), [microsoft/BitNet](https://github.com/microsoft/BitNet).
+
