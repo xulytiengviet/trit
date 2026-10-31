@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<meta name="description" content="TRITLAB: nghiên cứu CVNSS4.0, Base27 và ánh xạ song ánh 27 ký hiệu vào 3 trit cân bằng; mã hóa, giải mã, tự kiểm chứng trực tiếp.">
+<title>TRITLAB / CVNSS4.0 — Base27 × 3 Trit Lab</title>
+<style>
+:root{--bg:#070707;--paper:#101010;--paper2:#171717;--fg:#f5f5f5;--soft:#d1d1d1;--muted:#a4a4a4;--line:#555;--dim:#333;--green:#53ff92;--cyan:#59eaff;--pink:#ff5dff;--yellow:#fff266;--red:#ff6b88;--blue:#69a7ff;--font:Consolas,'Cascadia Mono','Courier New',monospace}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--fg);font:13px/1.65 var(--font);min-width:320px}
+body.crt:after{content:"";position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(180,180,180,.045) 4px);z-index:30}
+button,input,textarea,select{font:inherit}button{cursor:pointer}a{color:var(--cyan)}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible{outline:2px dashed var(--yellow);outline-offset:3px}
+.wrap{max-width:1500px;margin:auto;padding:18px 24px 55px}
+.sys{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:8px 13px;border:1px solid var(--line);color:var(--green);font-size:11px;font-weight:bold;letter-spacing:.07em}
+.sys span+span{color:var(--cyan)}
+.nav{display:flex;flex-wrap:wrap;gap:6px;margin:13px 0 18px}
+.nav a{display:inline-block;padding:7px 11px;border:1px solid var(--dim);color:var(--cyan);text-decoration:none;font-size:12px;font-weight:800}
+.nav a.active{color:var(--pink);border-color:var(--pink)}.nav a:hover{color:var(--yellow);border-color:var(--yellow)}
+.hero{border:1px solid var(--line);background:var(--paper);display:grid;grid-template-columns:minmax(0,1.75fr) minmax(280px,.85fr)}
+.hero-main{padding:30px}.kicker{font-weight:bold;color:var(--green);letter-spacing:.06em;font-size:11px}
+h1{margin:13px 0 14px;line-height:1.08;font-size:clamp(34px,5.5vw,72px);letter-spacing:-.06em}
+h1 span{color:var(--pink)}.hero p{color:var(--soft);max-width:800px;margin:0 0 12px}
+.hero-aside{border-left:1px solid var(--line);padding:23px 21px}
+.hero-aside h2{margin:0 0 18px;color:var(--yellow);font-size:13px}
+.equation{font-size:clamp(25px,4vw,45px);font-weight:900;color:var(--green);line-height:1.2;letter-spacing:-.04em}
+.equation small{display:block;font-size:11px;color:var(--soft);letter-spacing:0;margin:8px 0 18px}
+.nums{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.nums div{border:1px solid var(--dim);padding:10px 6px;text-align:center}.nums b{display:block;color:var(--cyan);font-size:19px}.nums small{font-size:10px;color:var(--soft)}
+.sect{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;align-items:center;margin:27px 0 12px}.sect h2{margin:0;color:var(--cyan);font-size:16px}.sect h2:before{content:"> ";color:var(--green)}.sect small{color:var(--pink)}
+.panel{border:1px solid var(--line);background:var(--paper);padding:17px}
+.note{padding:12px 14px;border:1px dashed var(--line);color:var(--soft);margin:14px 0;font-size:12px}
+.note strong{color:var(--yellow)}.note.error{border-color:var(--red)}.note.ok{border-color:var(--green)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:13px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.field{min-width:0}.field label{display:block;color:var(--green);font-size:11px;font-weight:bold;margin-bottom:7px}
+textarea,select{width:100%;background:#090909;color:var(--fg);border:1px solid var(--line);border-radius:0;padding:11px;outline:none}
+textarea{height:108px;resize:vertical;word-break:break-word}textarea:focus,select:focus{border-color:var(--cyan)}
+fieldset{border:1px solid var(--dim);margin:0 0 11px;padding:12px 13px}legend{color:var(--yellow);padding:0 6px}
+.mode-row{display:flex;gap:18px;flex-wrap:wrap}.mode-row label{color:var(--soft);cursor:pointer}.mode-row input{accent-color:var(--green)}
+.buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{padding:9px 12px;background:var(--bg);border:1px solid var(--line);color:var(--green);font-weight:800}
+.btn:hover{border-color:var(--yellow);color:var(--yellow)}
+.output{margin-top:10px}.output h3{font-size:11px;color:var(--yellow);margin:0 0 6px;letter-spacing:.04em}
+pre.data{min-height:45px;max-height:180px;overflow:auto;margin:0;white-space:pre-wrap;overflow-wrap:anywhere;border:1px solid var(--dim);padding:11px;background:var(--bg);font:12px/1.65 var(--font)}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:13px}
+.metric{padding:12px;border:1px solid var(--line);background:var(--paper)}.metric b{display:block;color:var(--green);font-size:24px}.metric small{color:var(--soft)}
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.step{padding:13px;border:1px solid var(--line);min-width:0;background:var(--paper)}
+.step i{font-style:normal;color:var(--pink);font-size:11px}.step h3{font-size:12px;color:var(--cyan);margin:7px 0}.step pre{margin:0;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;max-height:130px;font:12px/1.5 var(--font);color:var(--soft)}
+.table-scroll{overflow:auto;max-width:100%;border:1px solid var(--line);max-height:600px}
+table{width:100%;border-collapse:collapse;text-align:left;min-width:570px}th,td{padding:9px 10px;border-right:1px solid var(--dim);border-bottom:1px solid var(--dim);font-variant-numeric:tabular-nums}th{color:var(--yellow);position:sticky;top:0;background:var(--paper2)}td:nth-child(2){color:var(--green);font-weight:bold}td:nth-child(4){color:var(--cyan)}td:nth-child(5){color:var(--pink)}
+tr:nth-child(even){background:var(--paper)}tr:focus-within,tr:hover{background:var(--paper2)}
+.legend{display:flex;gap:11px;flex-wrap:wrap;color:var(--soft);font-size:11px;margin:10px 0}
+.pill{border:1px solid var(--line);display:inline-block;padding:2px 7px;color:var(--green);font-weight:bold;font-size:11px}
+.card{padding:17px;border:1px solid var(--line);background:var(--paper)}.card h3{color:var(--cyan);margin:0 0 10px;font-size:13px}.card p{color:var(--soft);font-size:12px;margin:0 0 9px}.card small{color:var(--yellow)}
+.ahead{font-weight:800;color:var(--yellow);margin:0 0 12px}.source-links{display:flex;gap:10px;flex-wrap:wrap}.source-links a{font-size:11px;border:1px solid var(--dim);text-decoration:none;padding:8px 10px}.source-links a:hover{border-color:var(--cyan)}
+footer{border-top:1px solid var(--dim);margin-top:28px;padding-top:13px;color:var(--muted);font-size:11px}
+@media(max-width:950px){.grid3{grid-template-columns:1fr 1fr}.flow{grid-template-columns:1fr 1fr}.metrics{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:670px){.wrap{padding:11px 12px 30px}.hero,.grid2,.grid3,.flow{grid-template-columns:1fr}.hero-aside{border-left:0;border-top:1px solid var(--line)}.hero-main{padding:19px}h1{font-size:38px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body class="crt">
+<div class="wrap">
+<header>
+ <div class="sys"><span>■ TRITLAB.EXE / CVNSS-27 / BALANCED TERNARY</span><span>[VI] · BUILD 2026.10 · OFFLINE-READY</span></div>
+ <nav class="nav" aria-label="Chuyên mục"><a href="./#overview">[01] KPI</a><a href="./#representations">[02] BIỂU DIỄN 70</a><a href="./morse.html">[03] MORSE / TRIT ♫</a><a class="active" href="./cvnss.html" aria-current="page">[04] CVNSS4.0</a><a href="#research">[05] NGHIÊN CỨU</a><a href="https://github.com/xulytiengviet/trit" target="_blank" rel="noopener noreferrer">[SOURCE]</a></nav>
+</header>
+<main>
+<section class="hero">
+ <div class="hero-main"><div class="kicker">[04] LANGUAGE / ENCODING / FORMAL BRIDGE</div><h1>CVNSS<span>4.0</span><br>BASE<span>27</span> × TRIT<span>.</span></h1>
+ <p><strong>26 chữ cái A–Z + khoảng trắng = 27 ký hiệu.</strong> Ánh xạ từng ký hiệu CVNSS4.0 thành một chữ số Base27 và đúng ba trit cân bằng <strong>{−1, 0, +1}</strong>. Đây là song ánh ở lớp ký tự đã mã hóa, không phải chứng minh Quốc ngữ ↔ CVNSS4.0 là song ánh.</p>
+ <span class="pill">RULE ORACLE: BIJECTIVE 27/27</span> <span class="pill">CVNSS: AUDIT-SAFE v5.0.0</span>
+ </div>
+ <aside class="hero-aside"><h2>THEOREM / ENCODING</h2><div class="equation">3³ = 27<small>27 trạng thái / ba chữ số tam phân</small></div><div class="nums"><div><b>27</b><small>KÝ HIỆU</small></div><div><b>3</b><small>TRIT/KÝ TỰ</small></div><div><b>4,755</b><small>BIT THÔNG TIN*</small></div></div><p style="font-size:11px;margin-top:12px">* log₂(27) ≈ 4,7549 bit/ký tự, nếu 27 ký hiệu đồng xác suất; trit không phải bit vật lý.</p></aside>
+</section>
+<div class="sect" id="lab"><h2>THÍ NGHIỆM MÃ HÓA / GIẢI MÃ</h2><small>LIVE / LOCAL / NO API</small></div>
+<section class="panel">
+ <fieldset><legend>/INPUT MODE</legend><div class="mode-row"><label><input name="srcMode" type="radio" value="cqn" checked> Quốc ngữ → CVNSS4.0</label><label><input name="srcMode" type="radio" value="cvss"> CVNSS4.0 → Base27</label></div></fieldset>
+ <div class="grid2"><div class="field"><label for="source">/TEXT INPUT</label><textarea id="source" spellcheck="false" maxlength="4000">Tôi yêu tiếng Việt</textarea></div><div class="field"><label for="decodeInput">/DECODE TRITS — CHUỖI T / 0 / 1</label><textarea id="decodeInput" placeholder="Ví dụ: 000 00T (cho K, J theo bảng ánh xạ); có thể nhập liền nhau, thêm khoảng trắng giữa nhóm." spellcheck="false" maxlength="12000"></textarea></div></div>
+ <div class="buttons"><button class="btn" id="encode" type="button">[▶] MÃ HÓA</button><button class="btn" id="decode" type="button">[↶] GIẢI MÃ TRIT</button><button class="btn" id="example" type="button">[↺] VÍ DỤ</button><button class="btn" id="copy" type="button">[⧉] SAO CHÉP TRIT</button><button class="btn" id="export" type="button">[↓] XUẤT JSON</button><a class="btn" href="./morse.html" style="text-decoration:none">[♫] TRUYỀN MORSE</a></div>
+ <div id="message" class="note" role="status" aria-live="polite">[READY] Đang chờ phép mã hóa.</div>
+ <div class="grid2">
+ <div class="output"><h3>QUỐC NGỮ / CONVERTER RESULT</h3><pre class="data" id="cqn">—</pre></div>
+ <div class="output"><h3>CVN / HỆ CHỮ TRUNG GIAN</h3><pre class="data" id="cvn">—</pre></div>
+ <div class="output"><h3>CVNSS4.0 / 27 KÝ HIỆU</h3><pre class="data" id="cvss">—</pre></div>
+ <div class="output"><h3>BASE27 / DÃY SỐ 0–26</h3><pre class="data" id="base">—</pre></div>
+ <div class="output"><h3>BALANCED TRITS / T, 0, 1</h3><pre class="data" id="trits">—</pre></div>
+ <div class="output"><h3>GIẢI MÃ NGƯỢC / TRIT → BASE27 → CVNSS</h3><pre class="data" id="roundtrip">—</pre></div>
+ </div>
+ <div class="metrics"><div class="metric"><b id="mCount">0</b><small>KÝ TỰ CVNSS</small></div><div class="metric"><b id="mTrit">0</b><small>TRIT TẤT CẢ</small></div><div class="metric"><b id="mBinary">0</b><small>BIT (MÃ 5-BIT CỐ ĐỊNH)</small></div><div class="metric"><b id="mLower">0</b><small>BIT CẬN DƯỚI THÔNG TIN</small></div></div>
+</section>
+<div class="sect"><h2>PIPELINE / NGÔN NGỮ → TRẠNG THÁI</h2><small>TRANSPARENT MAPPING</small></div>
+<div class="flow"><div class="step"><i>01 / CQN</i><h3>CHỮ QUỐC NGỮ</h3><pre id="stage1">—</pre></div><div class="step"><i>02 / CVSS</i><h3>CVNSS4.0</h3><pre id="stage2">—</pre></div><div class="step"><i>03 / BASE27</i><h3>CHỮ SỐ 0–26</h3><pre id="stage3">—</pre></div><div class="step"><i>04 / TERNARY</i><h3>3 TRIT CÂN BẰNG</h3><pre id="stage4">—</pre></div></div>
+<div class="sect" id="mapping"><h2>ÁNH XẠ 27/27 — QUY ƯỚC TRITLAB</h2><small>BIJECTIVE / EXHAUSTIVE</small></div>
+<div class="note"><strong>Định nghĩa:</strong> S = "␠ABCDEFGHIJKLMNOPQRSTUVWXYZ"; index(␠)=0, index(A)=1, …, index(Z)=26. Với n ∈ [0,26], viết n = 9a + 3b + c (a,b,c ∈ {0,1,2}); bộ trit cân bằng là (a−1,b−1,c−1). Giá trị có dấu của bộ ba là n−13. Dùng T = −1, 0 = 0, 1 = +1. Quy ước này khớp phòng thí nghiệm Morse của TRITLAB.</div>
+<div class="table-scroll"><table><thead><tr><th>#</th><th>KÝ HIỆU</th><th>BASE27</th><th>3 TRIT</th><th>GIÁ TRỊ CÂN BẰNG</th></tr></thead><tbody id="mappingRows"></tbody></table></div>
+<div class="legend"><span>🔴 T = −1</span><span>🟡 0 = 0</span><span>🟢 1 = +1</span><span>[␠] = dấu cách</span></div>
+<div class="sect" id="research"><h2>ĐẶC ĐIỂM KỸ THUẬT / HƯỚNG ỨNG DỤNG</h2><small>7 RESEARCH TRACKS</small></div>
+<div class="grid3">
+<article class="card"><h3>[01] Mã hóa chính xác 27 trạng thái</h3><p>Ba trit có đúng 27 mã, sử dụng hết không gian trạng thái. Mã nhị phân cố định cần 5 bit/ký hiệu và bỏ trống 5 trong 32 mã (15,625% mã). Khoảng chênh lệch dung lượng 5 bit so với cận dưới log₂27 chỉ khoảng 4,9% theo số bit.</p><small>Đã chứng minh toán học / Không hàm ý giảm 18,5% byte lưu trữ.</small></article>
+<article class="card"><h3>[02] Phân cấp 3 × 9 × 3</h3><p>Có thể tổ chức bảng 27 ký hiệu thành 3 nhóm × 9 ký hiệu hoặc các trường tam phân ba tầng. Việc khớp thanh ghi 27 trit/9 ký tự là một thiết kế thử nghiệm, không mặc nhiên có trên CPU thương mại.</p><small>Thiết kế giả định / Cần benchmark phần cứng.</small></article>
+<article class="card"><h3>[03] Số học tam phân cân bằng</h3><p>Trit thuộc {−1,0,+1}; phép đổi dấu một số cân bằng thực hiện bằng đảo dấu từng trit. Tính chất số học này không tự động giúp so sánh, sắp xếp hoặc đảo thứ tự văn bản.</p><small>Đã biết trong lý thuyết số / NLP cần thực nghiệm.</small></article>
+<article class="card"><h3>[04] Chứng minh hình thức</h3><p>Kiểm thử vét cạn 27 ký hiệu xác nhận encode/decode của lớp Base27↔trit. Vì mọi mã đều hợp lệ nên bộ ba trit đơn lẻ không phát hiện lỗi thay mã; phải thêm checksum hoặc mã phát hiện/sửa lỗi riêng.</p><small>Đã kiểm thử ở lớp ánh xạ, không thay thế kiểm toán bộ chuyển đổi ngôn ngữ.</small></article>
+<article class="card"><h3>[05] Ternary LLM / Edge AI</h3><p>CVNSS có thể làm bộ ký tự đầu vào hoặc tokenizer thực nghiệm. BitNet b1.58 dùng trọng số {−1,0,+1}; lượng tử hóa trọng số khác với mã hóa văn bản đầu vào. Cần so sánh chất lượng, từ vựng, độ dài token, thời gian và năng lượng.</p><small>Ứng dụng nghiên cứu / Không bảo đảm loại bỏ Unicode hay tăng tốc.</small></article>
+<article class="card"><h3>[06] Nén dữ liệu / IoT</h3><p>Mức log₂27 ≈ 4,755 bit/ký tự là giới hạn lý tưởng khi phân bố đồng đều; dung lượng lưu thực tế phụ thuộc đóng gói, phân bố văn bản và codec. 27 trạng thái không phải không gian khóa bảo mật đủ mạnh và không tạo mã hóa bí mật.</p><small>Cần đo thực tế so với UTF-8 + gzip/Brotli.</small></article>
+<article class="card"><h3>[07] Qutrit / mã hóa đa trị</h3><p>27 = 3³ tương đương số trạng thái cơ sở đo được của ba qutrit. Đây là tương ứng về số chiều không gian, không phải lợi thế lượng tử hay giao thức truyền lượng tử đã được chứng minh.</p><small>Định hướng dài hạn / Tách biệt điện toán lượng tử và tam phân cổ điển.</small></article>
+</div>
+<div class="sect"><h2>KIỂM CHỨNG / CẢNH BÁO HỌC THUẬT</h2><small>RULE ORACLE V1</small></div>
+<section class="panel"><p id="testStatus" class="ahead" role="status">[PENDING] RUN SELF-TEST</p>
+<div class="note"><strong>Hai tầng đúng đắn:</strong> (1) CVNSS → Base27 → 3 trit → CVNSS là phép song ánh với mọi chuỗi nằm trong bảng 27 ký hiệu. (2) Quốc ngữ → CVNSS4.0 → Quốc ngữ có thể nhập nhằng khi giải mã, vì nhiều cách viết/âm tiết có thể trùng mã; không tuyên bố lossless ở tầng ngôn ngữ. Ký tự ngoài A–Z và khoảng trắng bị từ chối trong phần trit, không âm thầm bỏ qua.</div>
+<div class="note"><strong>Định lượng chính xác:</strong> 3 trit = 3log₂3 ≈ 4,755 bit thông tin (không phải 1,585 bit); 1 trit ≈ 1,585 bit. So sánh n ký tự: n×5 bit với n×log₂27 bit là cận thông tin, không phản ánh số byte thực tế hay điện năng.</div>
+<div class="note"><strong>Tiêu chuẩn và phạm vi:</strong> Base27/trit bên trên là quy ước ánh xạ của TRITLAB, không phải tiêu chuẩn Unicode, Morse ITU hay kiến trúc phần cứng xác thực TRI-27. Chứng minh 27 trạng thái không đủ để chứng minh hiệu quả LLM, bảo mật IoT hoặc lợi thế chip tam phân.</div>
+<div class="source-links"><a target="_blank" rel="noopener noreferrer" href="https://github.com/xulytiengviet/trit">[01] TRITLAB SOURCE</a><a target="_blank" rel="noopener noreferrer" href="https://github.com/Trehinos/balanced-ternary">[02] BALANCED TERNARY OSS</a><a target="_blank" rel="noopener noreferrer" href="https://www.microsoft.com/en-us/research/publication/the-era-of-1-bit-llms-all-large-language-models-are-in-1-58-bits/">[03] BITNET b1.58 PAPER</a><a target="_blank" rel="noopener noreferrer" href="https://github.com/microsoft/BitNet">[04] BITNET CODE</a><a href="./morse.html">[05] MORSE / AUDIO LAB</a></div>
+</section>
+</main>
+<footer>TRITLAB.EXE / CVNSS4.0 LAB · 27 ↔ 3³ · LOCAL JAVASCRIPT · RESEARCH PROTOTYPE. Không yêu cầu kết nối mạng sau khi tải tệp.</footer>
+</div>
+<script src="./cvnss-converter.js"></script>
+<script>
+(function(){
+'use strict';
+var ABC=' ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+var $=function(id){return document.getElementById(id)};
+var modes=document.querySelectorAll('input[name="srcMode"]');
+var current={source:'',mode:'',cqn:'',cvn:'',cvss:'',digits:[],trits:[],ready:false};
+function show(id,v){$(id).textContent=String(v)}
+function info(s,cls){$('message').textContent=s;$('message').className='note'+(cls?' '+cls:'')}
+function mode(){return document.querySelector('input[name="srcMode"]:checked').value}
+function trio(n){var a=Math.floor(n/9)-1,b=Math.floor(n%9/3)-1,c=n%3-1;return [a,b,c].map(function(v){return v<0?'T':v>0?'1':'0'}).join('')}
+function fromTrio(t){if(!/^[T01]{3}$/.test(t))throw Error('Bộ ba trit không hợp lệ');return 9*('T01'.indexOf(t.charAt(0)))+3*('T01'.indexOf(t.charAt(1)))+'T01'.indexOf(t.charAt(2))}
+function encodeChars(s){var symbols=Array.from(s.toUpperCase());var bad=symbols.map(function(c,i){return ABC.indexOf(c)<0?{c:c,i:i}:null}).filter(Boolean);if(bad.length){throw Error('Ký tự ngoài bảng 27 tại vị trí '+(bad[0].i+1)+': '+JSON.stringify(bad[0].c)+'. Hãy bỏ dấu câu, số hoặc ký hiệu ngoài CVNSS4.0; không tự xóa dữ liệu.')}return {digits:symbols.map(function(c){return ABC.indexOf(c)}),trits:symbols.map(function(c){return trio(ABC.indexOf(c))})}}
+function render(){
+ var source=$('source').value;var sourceMode=mode();var engine=window.CVNSSConverter;
+ if(!engine||!engine.fromCqn||!engine.fromCvss){info('[ERROR] Không nạp được lõi CVNSS4.0 audit-safe.','error');return}
+ try{
+ var r=sourceMode==='cqn'?engine.fromCqn(source):engine.fromCvss(source);
+ var cvss=String(r.cvss).toUpperCase();var enc=encodeChars(cvss);
+ var decoded=enc.trits.map(fromTrio).map(function(n){return ABC.charAt(n)}).join('');
+ if(decoded!==cvss)throw Error('Lỗi bất biến ánh xạ!');
+ current={source:source,mode:sourceMode,cqn:r.cqn,cvn:r.cvn,cvss:cvss,digits:enc.digits,trits:enc.trits,ready:true};
+ show('cqn',r.cqn||'[EMPTY]');show('cvn',r.cvn||'[EMPTY]');show('cvss',cvss||'[EMPTY]');
+ show('base',enc.digits.join(' · ')||'[EMPTY]');show('trits',enc.trits.join(' ')||'[EMPTY]');show('roundtrip',decoded||'[EMPTY]');
+ show('stage1',sourceMode==='cqn'?source:r.cqn);show('stage2',cvss||'—');show('stage3',enc.digits.join(' '));show('stage4',enc.trits.join(' '));
+ show('mCount',cvss.length);show('mTrit',cvss.length*3);show('mBinary',cvss.length*5);
+ show('mLower',(cvss.length*Math.log2(27)).toFixed(2));
+ $('decodeInput').value=enc.trits.join(' ');
+ info('[OK] Song ánh CVNSS ↔ Base27 ↔ 3 trit: '+enc.digits.length+' ký hiệu; 100% khôi phục đúng chuỗi CVNSS.', 'ok');
+ }catch(e){current.ready=false;['cqn','cvn','cvss','base','trits','roundtrip','stage1','stage2','stage3','stage4'].forEach(function(id){show(id,'—')});['mCount','mTrit','mBinary','mLower'].forEach(function(id){show(id,'0')});info('[ERROR] '+e.message,'error')}
+}
+function decode(){
+ try{
+ var raw=$('decodeInput').value.toUpperCase().replace(/\s+/g,'');if(!raw)throw Error('Nhập chuỗi trit T, 0, 1 trước khi giải mã.');
+ if(!/^[T01]+$/.test(raw))throw Error('Chuỗi trit chỉ nhận T, 0, 1 và khoảng trắng xuống dòng.');
+ if(raw.length%3!==0)throw Error('Độ dài trit phải chia hết cho 3 (hiện có '+raw.length+' ký hiệu).');
+ var chunks=raw.match(/.{3}/g);var cvss=chunks.map(function(t){return ABC[fromTrio(t)]}).join('');
+ var r=window.CVNSSConverter.fromCvss(cvss);
+ show('roundtrip',cvss||'[EMPTY]');show('cvss',cvss||'[EMPTY]');show('cqn',r.cqn||'[EMPTY]');show('cvn',r.cvn||'[EMPTY]');show('base',chunks.map(fromTrio).join(' · '));show('trits',chunks.join(' '));
+ show('stage1',r.cqn);show('stage2',cvss);show('stage3',chunks.map(fromTrio).join(' '));show('stage4',chunks.join(' '));
+ show('mCount',cvss.length);show('mTrit',raw.length);show('mBinary',cvss.length*5);show('mLower',(cvss.length*Math.log2(27)).toFixed(2));
+ current={source:cvss,mode:'cvss',cqn:r.cqn,cvn:r.cvn,cvss:cvss,digits:chunks.map(fromTrio),trits:chunks,ready:true};
+ info('[OK] Giải mã chính xác lớp trit → CVNSS. Quốc ngữ là cách giải mã do bộ chuyển đổi lựa chọn, có thể nhập nhằng.', 'ok');
+ }catch(e){info('[ERROR] '+e.message,'error')}
+}
+function fillTable(){
+ var frag=document.createDocumentFragment();
+ for(var n=0;n<27;n++){
+ var tr=document.createElement('tr');var values=[n===0?'00':String(n).padStart(2,'0'),n===0?'␠':ABC[n],String(n),trio(n),String(n-13)];
+ values.forEach(function(v){var td=document.createElement('td');td.textContent=v;tr.appendChild(td)});frag.appendChild(tr);
+ }
+ $('mappingRows').appendChild(frag);
+}
+function tests(){
+ var combos=new Set();var passed=true;
+ for(var n=0;n<27;n++){var t=trio(n);combos.add(t);if(fromTrio(t)!==n||ABC.indexOf(ABC[n])!==n)passed=false}
+ var eng=window.CVNSSConverter;var converter=eng&&eng.selfTest?eng.selfTest():{ok:false,tests:0};
+ var ok=passed&&combos.size===27&&converter.ok===true;
+ show('testStatus',(ok?'[PASS]':'[FAIL]')+' Base27: '+combos.size+'/27 bộ ba độc nhất; round-trip: '+(passed?'PASS':'FAIL')+' · CVNSS converter: '+(converter.ok?'PASS':'FAIL')+' ('+converter.tests+' tests).');
+ $('testStatus').style.color=ok?'var(--green)':'var(--red)';
+ window.TRITLAB_CVNSS={trio:trio,fromTrio:fromTrio,alphabet:ABC,selfTest:function(){return {base27RoundTrip:passed,uniqueTriples:combos.size,converter:eng.selfTest()}}};
+}
+$('encode').addEventListener('click',render);
+$('source').addEventListener('input',render);
+modes.forEach(function(m){m.addEventListener('change',render)});
+$('decode').addEventListener('click',decode);
+$('example').addEventListener('click',function(){$('source').value='Tôi yêu tiếng Việt';document.querySelector('input[value="cqn"]').checked=true;render()});
+$('copy').addEventListener('click',function(){if(!current.ready){info('[ERROR] Chưa có kết quả hợp lệ để sao chép.','error');return}var v=current.trits.join(' ');if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(v).then(function(){info('[OK] Đã sao chép trit.','ok')}).catch(function(){info('[ERROR] Không thể sao chép vào clipboard.','error')})}else{var t=$('decodeInput');t.focus();t.select();info('[INFO] Đã chọn văn bản trit; nhấn Ctrl+C để sao chép.') }});
+$('export').addEventListener('click',function(){if(!current.ready){info('[ERROR] Chưa có bản mã hợp lệ.','error');return}
+var obj={schema:'TRITLAB-CVNSS-BASE27-v1',alphabet:ABC,index:'SPACE=0,A=1..Z=26',tritSymbols:{T:-1,'0':0,'1':1},sourceMode:current.mode,source:current.source,cqn:current.cqn,cvn:current.cvn,cvss:current.cvss,base27:current.digits,trits:current.trits,warning:'Lossless only for CVNSS/Base27/trits; CQN reverse conversion may be ambiguous'};
+var blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json;charset=utf-8'});var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='tritlab-cvnss-base27.json';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url)},1000);
+});
+fillTable();tests();render();
+})();
+</script>
+</body>
+</html>
